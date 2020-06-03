@@ -1,0 +1,11 @@
+.canvas{
+    background: black;
+    width: 100vw;
+    height: 100vh;
+}
+
+#map{
+    position: absolute;
+    width: 1175px;
+    height: 1032px;
+}
