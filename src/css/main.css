@@ -1,11 +1,19 @@
 .canvas{
+    position: absolute;
+    top: 0;
+    left: 0;
     background: black;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
+    z-index: 4;
 }
 
 #map{
+    background: white;
     position: absolute;
     width: 1175px;
     height: 1032px;
+    top: 0px;
+    left: 0px;
+    z-index: 5;
 }
