@@ -21,26 +21,12 @@ class Map extends React.Component{
 
     scrollToZoom(e){
         e.preventDefault();
-        this.setState( {scale: this.state.scale += e.deltaY * 0.01})
-        console.log(e)
-    }
+        let scale = this.state.scale
+        scale += e.deltaY * -0.01
+        scale = Math.min(Math.max(.125, scale), 3)
 
-    loadMapImg(level){
-        let pathname = "../../resources/maps/" + this.state.title + "/" + this.state.title + "-" + level + ".jpg"
-        let mapimg = new Image()
-        mapimg.onload = () => {console.log(mapimg.width + " "+ mapimg.height)}
-        mapimg.src=pathname
-        return(
-            <Draggable
-                bounds={{top:-250, left:-500, right:500, down:250}}
-                onDrag={this.onControlledDrag}
-                position={this.state.mapPosition}
-            >
-                <div onWheel={this.scrollToZoom} className={"map"}>
-                <img draggable={false} className={"map-content"} src={pathname} />
-                </div>
-            </Draggable>
-        )
+        this.setState( {scale: scale})
+        // console.log(this.state.scale, e.deltaY)
     }
 
     onControlledDrag= (e, position)=>{
@@ -48,13 +34,33 @@ class Map extends React.Component{
         this.setState({mapPosition: {x, y}})
     }
 
+    loadMapImg(level){
+        let pathname = "../../resources/maps/" + this.state.title + "/" + this.state.title + "-" + level + ".jpg"
+        // let mapimg = new Image()
+        // mapimg.onload = () => {console.log(mapimg.width + " "+ mapimg.height)}
+        // mapimg.src=pathname
+        return(
+            <Draggable
+                bounds={{top:-250, left:-500, right:500, down:250}}
+                onDrag={this.onControlledDrag}
+                position={this.state.mapPosition}
+            >
+                <div style={{transform:{scale: 5}}}
+                     onWheel={(e)=>{this.scrollToZoom(e)}}
+                     className={"map"}>
+                <img draggable={false} className={"map-content"} src={pathname} />
+                </div>
+            </Draggable>
+        )
+    }
+
     loadLevelChooser(){
         let content=[]
         for (let i=0; i<this.state.level; i++){
             content.push(
-                <span><label htmlFor={`level${i+1}`}>{`Level ${i+1}`}</label><input type="radio" id={`level${i+1}`} name="level"/><br/></span>
+                <span key={i}><label htmlFor={`level${i+1}`}>{`Level ${i+1}`}</label><input type="radio" id={`level${i+1}`} name="level"/><br/></span>
             )}
-        console.log(content)
+        // console.log(content)
         return content
     }
 
