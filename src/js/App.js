@@ -1,6 +1,8 @@
 import React from "react"
 import Draggable from "react-draggable";
+import Map from "./Map"
 import "../css/main.css"
+import "../css/map.css"
 
 class App extends React.Component{
     constructor(){
@@ -8,18 +10,12 @@ class App extends React.Component{
         this.filepath="../../resources/maps/Bank/bank-1.jpg";
     }
 
-    loadMapImg(){
-        return(
-            <Draggable draggable={false} id={"map"} >
-            <img id={"map-content"} src={this.filepath} />
-            </Draggable>
-        )
-    }
+
 
     render(){
         return(
-        <div className={"canvas"}>
-            {this.loadMapImg()}
+        <div id={"canvas"}>
+            <Map title={"bank"} level={1}/>
             {/*{document.onload = ()=>{this.dragElement(document.getElementById("map"))}}*/}
         </div>
         )

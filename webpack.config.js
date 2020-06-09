@@ -28,7 +28,7 @@ module.exports = {
             options: {
               modules: false, // !! true for using css module, false for using just css
               localsConvention: 'camelCase',
-              sourceMap: true
+              sourceMap: true,
             }
           },
         ]
@@ -39,6 +39,14 @@ module.exports = {
           {
             loader: 'file-loader',
           }
+        ]
+      },
+      {
+        test: /\.scss$/,
+        use: [
+            'style-loader',
+            'css-loader',
+            'sass-loader'
         ]
       }
     ]

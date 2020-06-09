@@ -1,19 +1,12 @@
-.canvas{
+#canvas{
+    /*padding: 5vw 5vh;*/
+    margin: 0;
     position: absolute;
     top: 0;
     left: 0;
     background: black;
     width: 100vw;
-    height: 100%;
+    height: 100vh;
     z-index: 4;
-}
-
-#map{
-    background: white;
-    position: absolute;
-    width: 1175px;
-    height: 1032px;
-    top: 0px;
-    left: 0px;
-    z-index: 5;
+    overflow: hidden;
 }
