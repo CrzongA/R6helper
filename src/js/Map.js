@@ -33,7 +33,8 @@ class Map extends React.Component{
         return(
             <Draggable
                 bounds={{top:-250, left:-500, right:500, down:250}}
-                onDrag={()=>{this.onControlledDrag}}
+                onDrag={this.onControlledDrag}
+                position={this.state.mapPosition}
             >
                 <div onWheel={this.scrollToZoom} className={"map"}>
                 <img draggable={false} className={"map-content"} src={pathname} />
