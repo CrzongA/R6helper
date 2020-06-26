@@ -2,7 +2,7 @@ import React from "react"
 import Draggable from "react-draggable";
 // import styles from "../scss/map.scss"
 import Sidebar from "./Sidebar";
-
+import Annotate from "./Annotate"
 import maps from "./mapEntries"
 
 class Map extends React.Component{
@@ -14,7 +14,10 @@ class Map extends React.Component{
             level: this.props.level,
             scale: 1,
             panels: "2",
-            mapPosition: {x:-50,y:-50}
+            mapOffset: {x:-50,y:-50},
+            annotateOn: false,
+            annotateMode:"off",
+            moving: false,
         }
         this.maps = maps
         this.loadMapImg.bind(this)
@@ -22,6 +25,7 @@ class Map extends React.Component{
         this.loadPanels.bind(this)
         this.scrollToZoom.bind(this)
         this.onControlledDrag.bind(this)
+        this.annotateSwitch.bind(this)
     }
 
     scrollToZoom(e){
@@ -34,9 +38,21 @@ class Map extends React.Component{
         console.log(this.state.scale, e.deltaY)
     }
 
+
+    annotateSwitch = (e) =>{
+        if (this.state.annotateOn){
+            this.setState({annotateOn:false, annotateMode:"off"})
+            console.log("annotate off")
+        }
+        else{
+            this.setState({annotateOn:true, annotateMode:"on"})
+            console.log("annotate on")
+        }
+    }
+
     onControlledDrag= (e, position)=>{
         const {x, y} = position;
-        this.setState({mapPosition: {x, y}})
+        this.setState({mapOffset: {x, y}})
     }
 
     loadMapImg(level){
@@ -45,7 +61,7 @@ class Map extends React.Component{
             <Draggable
                 bounds={{top:-250, left:-500, right:500, down:250}}
                 onDrag={this.onControlledDrag}
-                position={this.state.mapPosition}
+                position={this.state.mapOffset}
             >
                 <div>
                 <div style={{transform: 'scale('+ this.state.scale + ')'}}
@@ -98,10 +114,19 @@ class Map extends React.Component{
     render() {
         return (
             <div>
-                <Sidebar location={this.maps.bank.location} levels={this.maps.bank.levels}/>
+                <Sidebar 
+                location={this.maps.bank.location} 
+                levels={this.maps.bank.levels} 
+                switchHandler={this.annotateSwitch}
+                annotateOn={this.state.annotateOn}
+                annotateMode={this.state.annotateMode}
+                />
                 {this.loadPanels()}
-                <div className={"levelChooser"}>
-                </div>
+                <Annotate 
+                width={window.innerWidth*.5}
+                height={window.innerHeight}
+                mode={this.state.annotateOn} 
+                offset={this.state.mapOffset} />
             </div>
         )
     }

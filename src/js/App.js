@@ -4,6 +4,7 @@ import Map from "./Map"
 import "../css/main.css"
 import "../css/map.css"
 import "../css/sidebar.css"
+import "../css/annotate.css"
 
 class App extends React.Component{
     constructor(){

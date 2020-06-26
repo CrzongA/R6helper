@@ -7,7 +7,8 @@
     z-index: 2;
 }
 
-.levelSelector{
+.levelButton{
+    margin: 0 5px 0 5px;
     float: left;
     height: 5vh;
     width: 100px;
@@ -17,6 +18,7 @@
     border: 1px solid black;
     background: black;
     color: white;
+    -moz-user-select: none;
 }
 
 .dd-selector{
@@ -25,6 +27,6 @@
     width: 150px;
 }
 
-.levelSelector:hover{
+.levelButton:hover{
     background: #292929;
 }

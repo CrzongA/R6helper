@@ -1,0 +1,30 @@
+.annotate{
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+.toolsWrapper{
+    position: absolute;
+    bottom: 0;
+    height: 10vh;
+    width: 100vw;
+    background: rgba(26, 26, 26, 0.8);
+    z-index:3;
+}
+
+.cButton{
+    margin: 0 5px 0 5px;
+    float: left;
+    width: 100px;
+    height: 5vh;
+    background: black;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.cButton:hover{
+    background: #292929;
+}
+
