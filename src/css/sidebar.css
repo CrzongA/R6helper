@@ -1,0 +1,30 @@
+.sidebar{
+    position: absolute;
+    top:0;
+    width:100%;
+    height: 8vh;
+    background: rgba(26, 26, 26, 0.8);
+    z-index: 2;
+}
+
+.levelSelector{
+    float: left;
+    height: 5vh;
+    width: 100px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
+    border: 1px solid black;
+    background: black;
+    color: white;
+}
+
+.dd-selector{
+    float: left;
+    height: 5vh;
+    width: 150px;
+}
+
+.levelSelector:hover{
+    background: #292929;
+}

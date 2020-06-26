@@ -3,6 +3,7 @@ import Draggable from "react-draggable";
 import Map from "./Map"
 import "../css/main.css"
 import "../css/map.css"
+import "../css/sidebar.css"
 
 class App extends React.Component{
     constructor(){
@@ -15,7 +16,7 @@ class App extends React.Component{
     render(){
         return(
         <div id={"canvas"}>
-            <Map title={"bank"} level={1}/>
+            <Map location={"bank"} level={1}/>
             {/*{document.onload = ()=>{this.dragElement(document.getElementById("map"))}}*/}
         </div>
         )

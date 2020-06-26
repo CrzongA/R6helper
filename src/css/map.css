@@ -5,16 +5,17 @@
 
 .panel-wrapper{
     /*border: white solid 1px;*/
+    position: absolute;
+    z-index: 1;
     display: flex;
     width: 100vw;
     height: 100vh;
 }
 
 .map{
-    margin: 5px;
     position: relative;
-    top: -50px;
-    left: -50px;
+    top: -25px;
+    left: -25px;
     z-index: 5;
 }
 

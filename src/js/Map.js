@@ -1,19 +1,24 @@
 import React from "react"
 import Draggable from "react-draggable";
 // import styles from "../scss/map.scss"
+import Sidebar from "./Sidebar";
+
+import maps from "./mapEntries"
 
 class Map extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            title: this.props.title,
+            sidebarPos: "top",
+            location: this.props.location,
             level: this.props.level,
             scale: 1,
             panels: "2",
             mapPosition: {x:-50,y:-50}
         }
+        this.maps = maps
         this.loadMapImg.bind(this)
-        this.loadLevelChooser.bind(this)
+        // this.loadLevelChooser.bind(this)
         this.loadPanels.bind(this)
         this.scrollToZoom.bind(this)
         this.onControlledDrag.bind(this)
@@ -22,11 +27,11 @@ class Map extends React.Component{
     scrollToZoom(e){
         e.preventDefault();
         let scale = this.state.scale
-        scale += e.deltaY * -0.01
-        scale = Math.min(Math.max(.125, scale), 3)
+        scale += e.deltaY * -0.05
+        scale = Math.min(Math.max(.5, scale), 2.5)
 
         this.setState( {scale: scale})
-        // console.log(this.state.scale, e.deltaY)
+        console.log(this.state.scale, e.deltaY)
     }
 
     onControlledDrag= (e, position)=>{
@@ -35,26 +40,25 @@ class Map extends React.Component{
     }
 
     loadMapImg(level){
-        let pathname = "../../resources/maps/" + this.state.title + "/" + this.state.title + "-" + level + ".jpg"
-        // let mapimg = new Image()
-        // mapimg.onload = () => {console.log(mapimg.width + " "+ mapimg.height)}
-        // mapimg.src=pathname
+        let pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + ".jpg"
         return(
             <Draggable
                 bounds={{top:-250, left:-500, right:500, down:250}}
                 onDrag={this.onControlledDrag}
                 position={this.state.mapPosition}
             >
-                <div style={{transform:{scale: 5}}}
+                <div>
+                <div style={{transform: 'scale('+ this.state.scale + ')'}}
                      onWheel={(e)=>{this.scrollToZoom(e)}}
                      className={"map"}>
                 <img draggable={false} className={"map-content"} src={pathname} />
+                </div>
                 </div>
             </Draggable>
         )
     }
 
-    loadLevelChooser(){
+/*    loadLevelChooser(){
         let content=[]
         for (let i=0; i<this.state.level; i++){
             content.push(
@@ -62,7 +66,7 @@ class Map extends React.Component{
             )}
         // console.log(content)
         return content
-    }
+    }*/
 
     loadPanels(){
         let res;
@@ -94,9 +98,9 @@ class Map extends React.Component{
     render() {
         return (
             <div>
+                <Sidebar location={this.maps.bank.location} levels={this.maps.bank.levels}/>
                 {this.loadPanels()}
                 <div className={"levelChooser"}>
-                    {this.loadLevelChooser()}
                 </div>
             </div>
         )

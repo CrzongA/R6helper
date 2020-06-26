@@ -14,10 +14,13 @@
   "devDependencies": {
     "css-loader": "^3.4.2",
     "file-loader": "^5.1.0",
+    "konva": "^7.0.0",
+    "lazy-brush": "^1.0.1",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-draggable": "^4.4.2",
+    "react-konva": "^16.13.0-3",
     "react-router-dom": "^5.1.2",
     "semantic-ui-react": "^0.88.2"
   },
@@ -38,6 +41,7 @@
     "to-string-loader": "^1.1.6",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.10.3",
+    "websocket-extensions": "0.1.4"
   }
 }
