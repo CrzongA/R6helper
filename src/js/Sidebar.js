@@ -11,33 +11,40 @@ class Sidebar extends React.Component{
             currentLevel: 1,
             selectedGameMode: 'all',
         }
-        this.loadFloors.bind()
-        this.selectFloor.bind()
-        this.annotateSwitch = this.props.switchHandler
+        this.annotateSwitch = this.props.annotateHandler
+        this.changeLevel = this.props.changeLevel
+        this.changeTacticalMode = this.props.tacticalModeHandler
+        this.syncOffset = this.props.syncOffset
+        this.tacticalMode = this.props.tactical
+        this.loadFloorButtons = this.loadFloorButtons.bind(this)
+        this.selectFloor = this.selectFloor.bind(this)
     }
 
-    selectFloor=(e)=>{
-        // console.log(e)
+    selectFloor=(e, ind)=>{
+        // console.log(e, ind)
+        this.changeLevel(ind)
     }
 
-    loadFloors(){
+    loadFloorButtons(){
         let items=[]
         this.state.levels.forEach((it)=>{
-            items.push(
-                <div key={it.index} className={"levelButton"} onClick={this.selectFloor}>{it.name}</div>
-            )
+            if (this.props.tactical){
+                if (it.tactical){
+                    items.push(
+                        <div key={it.index} className={"lButton"} onClick={(e) =>{this.selectFloor(e, it.index);this.syncOffset()}}>{it.name}</div>
+                    )
+                }
+            }
+            else{
+                items.push(
+                    <div key={it.index} className={"lButton"} onClick={(e) =>this.selectFloor(e, it.index)}>{it.name}</div>
+                )
+            }
         })
         return items
     }
 
-    annotateSwitch = (e) =>{
-        if (this.props.annotateOn){
-            this.setState({annotateOn:false, annotateMode:"off"})
-        }
-        else{
-            this.setState({annotateOn:true, annotateMode:"on"})
-        }
-    }
+
 
     render(){
         return(
@@ -49,10 +56,20 @@ class Sidebar extends React.Component{
                     <option value={""}>placeholder</option>
                 </select>
                 <div className={"levelSelector-wrapper"}>
-                    {this.loadFloors()}
+                    {this.loadFloorButtons()}
                 </div>
-                <div className={"annotateSwitch levelButton"} onClick={this.annotateSwitch}>
-                    <div>Annotate {this.props.annotateMode}</div>
+                <div className={"modeSwitches"}>
+                    <div
+                        className={"annotateSwitch lButton"}
+                        onClick={this.annotateSwitch}>
+                        <div>Annotate {this.props.annotateMode}</div>
+                    </div>
+                    <div className={"recenterButton lButton"} onClick={this.props.recenter}>
+                        <div>Recenter</div>
+                    </div>
+                    <div className={"tModeButton lButton"} onClick={this.props.tacticalModeHandler}>
+                        <div>Tactical</div>
+                    </div>
                 </div>
             </div>
         )

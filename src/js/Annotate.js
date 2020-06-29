@@ -9,26 +9,35 @@ class Annotate extends React.Component {
         this.state = {
             width: this.props.width,
             height: this.props.height,
-            cursorCoordinates: {sx: 0, sy: 0, px: 0, py: 0, cx: 0, cy: 0, lx: 0, ly: 0},
-            painting: false,
-            moving: false,
+            panels: this.props.panels,
+            cursorCoordinates: {lx: 0, ly: 0},
             path: [''],
             pathCount: 0,
             prevMoveXY:{x:0, y:0},
-            prevOffset:{x:0, y:0},
-            offset:{x:0, y:0},
-            mode:['draw']
+            prevOffset: {x:0,y:0},
+            offset: {x:0,y:0},
+            mode:"move",
+            painting:false
         }
-        this.draw.bind(this)
-        this.addPoint.bind(this)
-        this.closePath.bind(this)
-        this.handleMouseDown.bind(this)
-        this.handleMouseLeave.bind(this)
-        this.handleMouseMove.bind(this)
-        this.handleMouseUp.bind(this)
-        this.updateCursor.bind(this)
-        this.clearPoints.bind(this)
-        this.switchMode.bind(this)
+        this.draw = this.draw.bind(this)
+        this.addPoint = this.addPoint.bind(this)
+        this.closePath = this.closePath.bind(this)
+        this.handleMouseDown = this.handleMouseDown.bind(this)
+        this.handleMouseLeave = this.handleMouseLeave.bind(this)
+        this.handleMouseMove = this.handleMouseMove.bind(this)
+        this.handleMouseUp = this.handleMouseUp.bind(this)
+        this.updateCursor = this.updateCursor.bind(this)
+        this.clearPoints = this.clearPoints.bind(this)
+        this.switchMode = this.switchMode.bind(this)
+        this.loadPanels = this.loadPanels.bind(this)
+
+    }
+
+    componentDidMount() {
+        this.setState({
+            prevOffset: this.props.mapOffset,
+            offset: this.props.mapOffset
+        })
     }
 
     updateOffset(){
@@ -51,8 +60,8 @@ class Annotate extends React.Component {
                 stroke: 'red',
                 // fill: 'black',
                 scale: {x: 1, y: 1},
-                offsetX: this.state.offset.x,
-                offsetY: this.state.offset.y
+                offsetX: this.props.annotateOffset.x,
+                offsetY: this.props.annotateOffset.y
             }
             allItems.push(<Path key={i} {...pathProps}/>)
             i++
@@ -74,16 +83,16 @@ class Annotate extends React.Component {
         this.setState({path: existPath})
     }
 
-
     switchMode = (e) => {
-        console.log(e)
-        if(this.state.mode=="draw"){
+        if(!this.props.movable){
             console.log("move mode")
             this.setState({mode: 'move'})
+            this.props.changeMovable()
         }
-        else if (this.state.mode=="move"){
+        else if (this.props.movable){
             console.log("draw mode")
             this.setState({mode: 'draw'})
+            this.props.changeMovable()
         }
     }
 
@@ -98,52 +107,64 @@ class Annotate extends React.Component {
         let cursorY = e.evt.layerY
         // console.log("click "+ cursorX + " "+ cursorY)
         // console.log(e.currentTarget, e.target.content.className)
-        console.log(e.evt.screenX, e.evt.screenY)
-        if (this.state.mode=="draw") {
-            this.setState({painting: true});
-            this.addPoint(cursorX, cursorY, true)
+        // console.log(e.evt.screenX, e.evt.screenY)
+        if (!this.props.movable && this.state.mode=="draw") {
+            this.setState({painting: true})
+            this.addPoint(cursorX+this.props.annotateOffset.x, cursorY+this.props.annotateOffset.y, true)
         }
-        else if (this.state.mode=="move"){
-            this.setState({moving: true, prevMoveXY:{x:cursorX, y:cursorY}})
+        else if (this.props.movable){
+            this.setState({prevMoveXY:{x:cursorX, y:cursorY}})
+            // this.props.dragHandler(null, {x:cursorX, y:cursorY})
+            this.props.changeMoving(true)
         }
 
     }
 
     handleMouseMove = (e) => {
-        let LcursorX = e.evt.layerX
-        let LcursorY = e.evt.layerY
+        let cursorX = e.evt.layerX
+        let cursorY = e.evt.layerY
+        console.log(e.evt.layerX, e.evt.layerY)
 
         if (this.state.painting) {
-            this.addPoint(LcursorX, LcursorY)
+            this.addPoint(cursorX+this.props.annotateOffset.x, cursorY+this.props.annotateOffset.y)
         }
-        else if (this.state.moving){
+        else if (this.props.movable && this.props.moving){
             let origin = this.state.prevMoveXY
-            let prevOffset = this.state.prevOffset
-            console.log(origin.x)
-            let moveX = origin.x-LcursorX
-            let moveY = origin.y-LcursorY
-            this.setState({offset: {x:prevOffset.x+moveX, y:prevOffset.y+moveY}})
+            let prevOffset = this.props.mapPrevOffset
+            let MmoveX = cursorX - origin.x + prevOffset.x
+            let MmoveY = cursorY - origin.y + prevOffset.y
+            let DmoveX = origin.x - cursorX + prevOffset.x
+            let DmoveY = origin.y - cursorY + prevOffset.y
+            this.props.dragHandler(null, {x:MmoveX, y:MmoveY})
+            this.props.changeAnnotateOffset({x:DmoveX, y:DmoveY})
         }
         this.setState({
             cursorCoordinates: {
-                lx: LcursorX,
-                ly: LcursorY
+                lx: cursorX,
+                ly: cursorY
             }
         })
     }
 
     handleMouseUp = (e) => {
+        let cursorX = e.evt.layerX
+        let cursorY = e.evt.layerY
         if (this.state.painting) {
-            this.closePath()
-            this.setState({pathCount: this.state.pathCount + 1, painting: false})
+            this.setState({pathCount: this.state.pathCount + 1, painting:false})
         }
-        else if (this.state.moving){
-            this.setState({moving:false, prevMoveXY:{x:0, y:0}, prevOffset:this.state.offset})
+        else if (this.props.movable){
+            this.setState({prevMoveXY:{x:0, y:0}, prevOffset:this.props.mapOffset})
+            this.props.changeMapPrevOffset(this.props.mapOffset)
+            // this.props.dragHandler()
+            // this.props.dragHandler(null, {x:cursorX, y:cursorY})
+            this.props.changeMoving(false)
         }
     }
 
     handleMouseLeave = (e) => {
-        this.setState({painting: false, moving:false})
+        this.setState({painting: false, prevMoveXY:{x:0, y:0}, prevOffset:this.props.mapOffset})
+        this.props.changeMapPrevOffset(this.props.mapOffset)
+        this.props.changeMoving(false)
     }
 
     clearPoints = (e) => {
@@ -151,13 +172,29 @@ class Annotate extends React.Component {
         this.setState({path:[]})
     }
 
-    recenter = (e) => {
-        this.setState({offset:{x:0, y:0}})
+    loadPanels(){
+        let ret =''
+        for (let i=0; i<this.state.panels;i++){
+            ret =
+            <Stage
+                width={this.props.width}
+                height={this.props.height}
+                onMouseDown={this.handleMouseDown}
+                onMouseUp={this.handleMouseUp}
+                onMouseMove={this.handleMouseMove}
+                onMouseLeave={this.handleMouseLeave}
+            >
+                <Layer>
+                    {this.draw()}
+                </Layer>
+            </Stage>
+        }
+        return ret
     }
 
     render() {
         return (
-            <div className={"annotate"}>
+            <div className={"annotate"} style={{display:this.props.display}}>
                 <div className={"toolsWrapper"}>
                         <div className={"modeChooser cButton"} onClick={this.switchMode}>
                             <div>{this.state.mode}</div>
@@ -165,22 +202,9 @@ class Annotate extends React.Component {
                     <div className={"clearPointsButton cButton"} onClick={this.clearPoints}>
                         <div>Clear</div>
                     </div>
-                    <div className={"recenterButton cButton"} onClick={this.recenter}>
-                        <div>Recenter</div>
-                    </div>
                 </div>
                 <div className={"canvas"}>
-                <Stage
-                    width={window.innerWidth*0.5}
-                    height={window.innerHeight}
-                    onMouseDown={this.handleMouseDown}
-                    onMouseUp={this.handleMouseUp}
-                    onMouseMove={this.handleMouseMove}
-                >
-                    <Layer>
-                        {this.draw()}
-                    </Layer>
-                </Stage>
+                    {this.loadPanels()}
                 </div>
             </div>
         )

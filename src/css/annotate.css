@@ -4,13 +4,20 @@
     z-index: 1;
 }
 
+.canvas{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 4;
+}
+
 .toolsWrapper{
     position: absolute;
     bottom: 0;
     height: 10vh;
     width: 100vw;
     background: rgba(26, 26, 26, 0.8);
-    z-index:3;
+    z-index:5;
 }
 
 .cButton{

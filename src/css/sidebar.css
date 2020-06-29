@@ -4,10 +4,14 @@
     width:100%;
     height: 8vh;
     background: rgba(26, 26, 26, 0.8);
-    z-index: 2;
+    z-index: 5;
 }
 
-.levelButton{
+.modeSwitches{
+    float: right;
+}
+
+.lButton{
     margin: 0 5px 0 5px;
     float: left;
     height: 5vh;
@@ -27,6 +31,6 @@
     width: 150px;
 }
 
-.levelButton:hover{
+.lButton:hover{
     background: #292929;
 }
