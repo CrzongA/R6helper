@@ -1,7 +1,5 @@
 import React from "react"
-import ReactDOM from "react-dom"
-import Konva from "konva"
-import {Stage, Layer, Rect, Text, Path,} from 'react-konva'
+import {Layer, Path, Stage,} from 'react-konva'
 
 class Annotate extends React.Component {
     constructor(props) {
@@ -16,7 +14,7 @@ class Annotate extends React.Component {
             prevMoveXY:{x:0, y:0},
             prevOffset: {x:0,y:0},
             offset: {x:0,y:0},
-            mode:"move",
+
             painting:false
         }
         this.draw = this.draw.bind(this)
@@ -28,7 +26,6 @@ class Annotate extends React.Component {
         this.handleMouseUp = this.handleMouseUp.bind(this)
         this.updateCursor = this.updateCursor.bind(this)
         this.clearPoints = this.clearPoints.bind(this)
-        this.switchMode = this.switchMode.bind(this)
         this.loadPanels = this.loadPanels.bind(this)
 
     }
@@ -83,18 +80,7 @@ class Annotate extends React.Component {
         this.setState({path: existPath})
     }
 
-    switchMode = (e) => {
-        if(!this.props.movable){
-            console.log("move mode")
-            this.setState({mode: 'move'})
-            this.props.changeMovable()
-        }
-        else if (this.props.movable){
-            console.log("draw mode")
-            this.setState({mode: 'draw'})
-            this.props.changeMovable()
-        }
-    }
+
 
     closePath() {
         let existPath = this.state.path
@@ -108,36 +94,40 @@ class Annotate extends React.Component {
         // console.log("click "+ cursorX + " "+ cursorY)
         // console.log(e.currentTarget, e.target.content.className)
         // console.log(e.evt.screenX, e.evt.screenY)
-        if (!this.props.movable && this.state.mode=="draw") {
+        if (!this.props.movable && this.props.mode=="draw") {
             this.setState({painting: true})
             this.addPoint(cursorX+this.props.annotateOffset.x, cursorY+this.props.annotateOffset.y, true)
         }
+/*
         else if (this.props.movable){
             this.setState({prevMoveXY:{x:cursorX, y:cursorY}})
             // this.props.dragHandler(null, {x:cursorX, y:cursorY})
             this.props.changeMoving(true)
         }
+*/
 
     }
 
     handleMouseMove = (e) => {
         let cursorX = e.evt.layerX
         let cursorY = e.evt.layerY
-        console.log(e.evt.layerX, e.evt.layerY)
+        // console.log(e.evt.layerX, e.evt.layerY)
 
         if (this.state.painting) {
             this.addPoint(cursorX+this.props.annotateOffset.x, cursorY+this.props.annotateOffset.y)
         }
+/*
         else if (this.props.movable && this.props.moving){
             let origin = this.state.prevMoveXY
             let prevOffset = this.props.mapPrevOffset
             let MmoveX = cursorX - origin.x + prevOffset.x
             let MmoveY = cursorY - origin.y + prevOffset.y
-            let DmoveX = origin.x - cursorX + prevOffset.x
-            let DmoveY = origin.y - cursorY + prevOffset.y
+            // let DmoveX = origin.x - cursorX + prevOffset.x
+            // let DmoveY = origin.y - cursorY + prevOffset.y
             this.props.dragHandler(null, {x:MmoveX, y:MmoveY})
-            this.props.changeAnnotateOffset({x:DmoveX, y:DmoveY})
+            this.props.changeAnnotateOffset({x:MmoveX, y:MmoveY}) //wtf??
         }
+*/
         this.setState({
             cursorCoordinates: {
                 lx: cursorX,
@@ -152,6 +142,7 @@ class Annotate extends React.Component {
         if (this.state.painting) {
             this.setState({pathCount: this.state.pathCount + 1, painting:false})
         }
+/*
         else if (this.props.movable){
             this.setState({prevMoveXY:{x:0, y:0}, prevOffset:this.props.mapOffset})
             this.props.changeMapPrevOffset(this.props.mapOffset)
@@ -159,6 +150,7 @@ class Annotate extends React.Component {
             // this.props.dragHandler(null, {x:cursorX, y:cursorY})
             this.props.changeMoving(false)
         }
+*/
     }
 
     handleMouseLeave = (e) => {
@@ -173,36 +165,24 @@ class Annotate extends React.Component {
     }
 
     loadPanels(){
-        let ret =''
-        for (let i=0; i<this.state.panels;i++){
-            ret =
-            <Stage
-                width={this.props.width}
-                height={this.props.height}
-                onMouseDown={this.handleMouseDown}
-                onMouseUp={this.handleMouseUp}
-                onMouseMove={this.handleMouseMove}
-                onMouseLeave={this.handleMouseLeave}
-            >
-                <Layer>
-                    {this.draw()}
-                </Layer>
-            </Stage>
-        }
-        return ret
+        return <Stage
+            width={this.props.width}
+            height={this.props.height}
+            onMouseDown={this.handleMouseDown}
+            onMouseUp={this.handleMouseUp}
+            onMouseMove={this.handleMouseMove}
+            onMouseLeave={this.handleMouseLeave}
+        >
+            <Layer>
+                {this.draw()}
+            </Layer>
+        </Stage>
     }
 
     render() {
         return (
             <div className={"annotate"} style={{display:this.props.display}}>
-                <div className={"toolsWrapper"}>
-                        <div className={"modeChooser cButton"} onClick={this.switchMode}>
-                            <div>{this.state.mode}</div>
-                        </div>
-                    <div className={"clearPointsButton cButton"} onClick={this.clearPoints}>
-                        <div>Clear</div>
-                    </div>
-                </div>
+
                 <div className={"canvas"}>
                     {this.loadPanels()}
                 </div>

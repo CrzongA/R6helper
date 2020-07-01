@@ -13,13 +13,16 @@ class Map extends React.Component{
             currentLevel: 1,
             minLevel: mapEntries.find(i=>i.location==this.props.location).lowestLevel,
             levelCount:mapEntries.find(i=>i.location==this.props.location).levelCount,
+            tMinLevel:mapEntries.find(i=>i.location==this.props.location).tacticalLowestLevel,
+            tLevelCount:mapEntries.find(i=>i.location==this.props.location).tacticalLevelCount,
             scale: 1,
             panels: 1,
             mapOffset: {x:-50,y:-50},
             mapPrevOffset: {x:-50, y:-50},
             annotateOffset:{x:0, y:0},
             annotateOn: false,
-            annotateMode: "off",
+            annotateState: "off",
+            annotateMode:"move",
             annotateDisplay: "none",
             tactical: false,
             movable: true,
@@ -33,18 +36,14 @@ class Map extends React.Component{
         this.onControlledDrag = this.onControlledDrag.bind(this)
         this.changeMapPrevOffset = this.changeMapPrevOffset.bind(this)
         this.changeAnnotateOffset = this.changeAnnotateOffset.bind(this)
-        this.annotateSwitch = this.annotateSwitch.bind(this)
+        this.annotateDisplaySwitch = this.annotateDisplaySwitch.bind(this)
         this.changeLevel = this.changeLevel.bind(this)
         this.changeTacticalMode = this.changeTacticalMode.bind(this)
         this.changeMovable = this.changeMovable.bind(this)
         this.changeMoving = this.changeMoving.bind(this)
         this.syncOffset = this.syncOffset.bind(this)
-
-
-        // console.log(typeof Object.keys(mapEntries))
-        // console.log(Object.keys(mapEntries)[0]=='bank')
-        // console.log(mapEntries.find(it => it.location=="bank"))
-
+        this.switchAnnotateMode = this.switchAnnotateMode.bind(this)
+        this.setPanelNo = this.setPanelNo.bind(this)
     }
 
     scrollToZoom(e){
@@ -57,14 +56,31 @@ class Map extends React.Component{
         console.log(this.state.scale, e.deltaY)
     }
 
+    setPanelNo(NOPanel){
+        this.setState({panels: NOPanel})
+    }
 
-    annotateSwitch = (e) =>{
+    annotateDisplaySwitch(){
         console.log("switch annotate")
         if (this.state.annotateOn){
-            this.setState({annotateOn:false, annotateMode:"off",annotateDisplay: "none"})
+            this.setState({annotateOn:false, annotateState:"off",annotateDisplay: "none"})
         }
         else{
-            this.setState({annotateOn:true, annotateMode:"on", annotateDisplay: "block"})
+            this.setState({annotateOn:true, annotateState:"on", annotateDisplay: "block"})
+        }
+    }
+
+
+    switchAnnotateMode(){
+        if(!this.state.movable){
+            console.log("move mode")
+            this.setState({annotateMode: 'move'})
+            this.changeMovable()
+        }
+        else if (this.state.movable){
+            console.log("draw mode")
+            this.setState({annotateMode: 'draw'})
+            this.changeMovable()
         }
     }
 
@@ -83,7 +99,7 @@ class Map extends React.Component{
     }
 
     onControlledDrag = (e, position) => {
-        console.log(position)
+        // console.log(position)
         if (this.state.movable) {
             const {x, y} = position;
             this.setState({mapOffset: {x:x, y:y}})
@@ -94,12 +110,14 @@ class Map extends React.Component{
         this.setState({mapPrevOffset:position})
     }
 
+
+
     syncOffset(){
 
     }
 
     changeAnnotateOffset = (position)=>{
-        // console.log(position)
+        console.log(position)
         this.setState({annotateOffset: position})
     }
 
@@ -124,6 +142,7 @@ class Map extends React.Component{
                     onWheel={(e)=>{this.scrollToZoom(e)}}
                     className={"map"}
                 >
+                    {this.loadAnnotate()}
                     <img draggable={false} className={"map-content"} src={pathname} />
                 </div>
                 </div>
@@ -133,6 +152,7 @@ class Map extends React.Component{
 
     loadPanels(){
         let res;
+        let leftLevel, rightLevel;
         if (this.state.panels==1){
             res =
             <div className={"panel-wrapper"} >
@@ -143,8 +163,16 @@ class Map extends React.Component{
 
         }
         else if (this.state.panels==2){
-            let leftLevel, rightLevel;
-            if (this.state.currentLevel<this.state.minLevel+this.state.levelCount-1){
+            let leftLevel, rightLevel, minLevel, levels;
+            if(this.state.tactical){
+                levels=this.state.tLevelCount
+                minLevel = this.state.tMinLevel
+            }
+            else{
+                levels = this.state.levelCount
+                minLevel = this.state.tMinLevel
+            }
+            if (this.state.currentLevel<minLevel+levels-1){
                 leftLevel = this.state.currentLevel
                 rightLevel = this.state.currentLevel+1
             }
@@ -164,6 +192,14 @@ class Map extends React.Component{
 
         }
         else if (this.state.panels==4){
+            if (this.state.currentLevel<this.state.minLevel+this.state.levelCount-1){
+                leftLevel = this.state.currentLevel
+                rightLevel = this.state.currentLevel+1
+            }
+            else{
+                leftLevel = this.state.currentLevel-1
+                rightLevel = this.state.currentLevel
+            }
             res =
                 <div className={"panel-wrapper"}>
                     <div className={"map-wrapper fourmaps"}>
@@ -211,15 +247,13 @@ class Map extends React.Component{
             annotateMode:this.state.annotateMode,
             display:this.state.annotateDisplay,
             panels: this.state.panels,
-            changeMovable: this.changeMovable,
             changeMoving: this.changeMoving,
             movable: this.state.movable,
-            moving: this.state.moving
+            moving: this.state.moving,
+            mode: this.state.annotateMode
         }
         let res =
-            <div>
                 <Annotate {...annotateArgs}/>
-            </div>
 
         return res
     }
@@ -244,16 +278,22 @@ class Map extends React.Component{
                 <Sidebar
                 location={currentMapObj.location}
                 levels={currentMapObj.levels}
-                annotateHandler={this.annotateSwitch}
+                annotateDisplaySwitch={this.annotateDisplaySwitch}
                 annotateMode={this.state.annotateMode}
+                annotateDisplay={this.state.annotateDisplay}
+                annotateState={this.state.annotateState}
                 tacticalModeHandler={this.changeTacticalMode}
                 tactical={this.state.tactical}
+                movable={this.state.movable}
+                changeMovable={this.changeMovable}
                 changeLevel={this.changeLevel}
                 recenter={this.recenter}
                 syncOffset={this.syncOffset}
+                switchAnnotateMode={this.switchAnnotateMode}
+                panels={this.state.panels}
+                panelHandler={this.setPanelNo}
                 />
                 {this.loadPanels()}
-                {this.loadAnnotate()}
             </div>
         )
     }

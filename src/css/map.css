@@ -42,7 +42,14 @@
 
 .twomaps{
     float: left;
-    /*width:50vw;*/
+    width:50vw;
     height: 100vh;
     overflow: hidden;
+}
+
+.fourmaps{
+    float:left;
+    width:50vw;
+    height:50vh;
+    overflow:hidden;
 }
