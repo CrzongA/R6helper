@@ -17,8 +17,8 @@ class Map extends React.Component{
             tLevelCount:mapEntries.find(i=>i.location==this.props.location).tacticalLevelCount,
             scale: 1,
             panels: 1,
-            mapOffset: {x:-50,y:-50},
-            mapPrevOffset: {x:-50, y:-50},
+            mapOffset: {x:0,y:0},
+            mapPrevOffset: {x:0, y:0},
             annotateOffset:{x:0, y:0},
             annotateOn: false,
             annotateState: "off",
@@ -121,6 +121,11 @@ class Map extends React.Component{
         this.setState({annotateOffset: position})
     }
 
+    loadMapBg(){
+        let pathname = "../../resources/maps/" + this.state.location + "/"
+        return <img draggable={false} className={"map-content map-bg"} src={} />
+    }
+
     loadMapImg(level){
         let pathname
         if (this.state.tactical){
@@ -131,7 +136,7 @@ class Map extends React.Component{
         }
         return(
             <Draggable
-                bounds={{top:-250, left:-500, right:500, down:250}}
+                bounds={{top:-250, left:-500, right:500, bottom:250}}
                 onDrag={this.onControlledDrag}
                 position={this.state.mapOffset}
                 disabled={!this.state.movable}
