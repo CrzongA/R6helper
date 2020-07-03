@@ -123,7 +123,7 @@ class Map extends React.Component{
 
     loadMapBg(){
         let pathname = "../../resources/maps/" + this.state.location + "/"
-        return <img draggable={false} className={"map-content map-bg"} src={} />
+        return <img draggable={false} className={"map-content map-bg"} />
     }
 
     loadMapImg(level){
