@@ -10,11 +10,12 @@ class Annotate extends React.Component {
             panels: this.props.panels,
             cursorCoordinates: {lx: 0, ly: 0},
             path: [''],
+            pathT:[''],
             pathCount: 0,
+            pathTCount: 0,
             prevMoveXY:{x:0, y:0},
             prevOffset: {x:0,y:0},
             offset: {x:0,y:0},
-
             painting:false
         }
         this.draw = this.draw.bind(this)
@@ -50,7 +51,12 @@ class Annotate extends React.Component {
     }
 
     draw() {
-        let pathItem, allItems = [], i = 0;
+        let pathItem, paths, allItems = [], i = 0;
+        if (this.props.tactical){
+            paths = this.state.pathT
+        }else{
+            paths = this.state.path
+        }
         for (pathItem of this.state.path) {
             let pathProps = {
                 data: pathItem,
@@ -159,9 +165,13 @@ class Annotate extends React.Component {
         this.props.changeMoving(false)
     }
 
-    clearPoints = (e) => {
+    clearPoints(){
         console.log("clear paths")
-        this.setState({path:[]})
+        if (this.state.tactical) {
+            this.setState({pathT: [],pathTCount: 0})
+        }else{
+            this.setState({path:[], pathCount:0})
+        }
     }
 
     loadPanels(){

@@ -1,0 +1,40 @@
+.op{
+    width: 100px;
+    height: 100px;
+    color: white;
+}
+
+.opSelectMenu{
+    display:none;
+    /*flex-flow: row wrap;*/
+    /*justify-content: space-around;*/
+    /*align-items: center;*/
+    background: rgba(0,0,0,0.8);
+    width: 80vw;
+    height: 80vh;
+    position: fixed;
+    top: 10vh;
+    left: 10vw;
+    z-index: 6;
+}
+
+.osm-sub{
+    display: flex;
+    width: 49%;
+    height: 100%;
+    float: left;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: flex-start;
+    text-align: center;
+}
+
+.divider{
+    border-right: 1px solid white;
+}
+
+.osm-sub p{
+    margin: auto;
+    width: 100%;
+    color: white;
+}

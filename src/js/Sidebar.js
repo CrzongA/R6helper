@@ -101,9 +101,10 @@ class Sidebar extends React.Component {
                     <div className={"modeChooser cButton"} onClick={this.props.switchAnnotateMode}>
                         <div>{this.props.annotateMode}</div>
                     </div>
-                    <div className={"clearPointsButton cButton"} onClick={this.clearPoints}>
+                    <div className={"clearPointsButton cButton"} onClick={this.props.handleClearPoints}>
                         <div>Clear</div>
                     </div>
+                    <div className={"opsChooser cButton"} onClick={this.props.handleOps}>Operators & Props</div>
                 </div>
             </div>
         )

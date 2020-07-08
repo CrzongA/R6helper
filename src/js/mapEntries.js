@@ -6,11 +6,14 @@ const mapEntries =
         lowestLevel:0,
         tacticalLevelCount:3,
         tacticalLowestLevel:0,
+        bgMapDimension:{width:2560, height:1440},
+        orgMapDimension:{width:1175, height:1032},
+        tacMapDimension:{width:2309, height:1732},
         levels: [
-            {index: 0, name: "Basement", background:true, tactical:true},
-            {index: 1, name: "1st floor", tactical:true},
-            {index: 2, name: "2st floor", tactical:true},
-            {index: 3, name: "Roof"}
+            {index: 0, name: "Basement", short: "B",background:true, tactical:true},
+            {index: 1, name: "1st floor", short: "1", tactical:true},
+            {index: 2, name: "2st floor", short: "2", tactical:true},
+            {index: 3, name: "Roof", short: "R"}
         ]
         },
     {

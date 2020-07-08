@@ -34,3 +34,22 @@
 .lButton:hover{
     background: #292929;
 }
+
+.opsChooser{
+    text-wrap: normal;
+}
+
+.cButton{
+    margin: 0 5px 0 5px;
+    float: left;
+    width: 100px;
+    height: 5vh;
+    background: black;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.cButton:hover{
+    background: #292929;
+}
