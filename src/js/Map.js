@@ -19,6 +19,7 @@ class Map extends React.Component{
             tLevelCount:mapEntries.find(i=>i.location==this.props.location).tacticalLevelCount,
             scale: 1,
             panels: 1,
+            bgOffset:{x:0, y:0},
             mapOffset: {x:0,y:0},
             mapPrevOffset: {x:0, y:0},
             annotateOffset:{x:0, y:0},
@@ -47,23 +48,27 @@ class Map extends React.Component{
         this.changeTacticalMode = this.changeTacticalMode.bind(this)
         this.changeMovable = this.changeMovable.bind(this)
         this.changeMoving = this.changeMoving.bind(this)
-        this.syncOffset = this.syncOffset.bind(this)
+        this.bgOffset = this.bgOffset.bind(this)
         this.switchAnnotateMode = this.switchAnnotateMode.bind(this)
         this.setPanelNo = this.setPanelNo.bind(this)
         this.loadIconSVG = this.loadIconSVG.bind(this)
         this.setOpsMenuDisplay = this.setOpsMenuDisplay.bind(this)
+        this.loadMapBg = this.loadMapBg.bind(this)
+        this.loadMapTop = this.loadMapTop.bind(this)
     }
 
     componentDidMount() {
-        this.annotateRef = React.createRef()
-        let w_str = window.getComputedStyle(document.getElementById(`map-${this.state.currentLevel}`)).width,
-            h_str = window.getComputedStyle(document.getElementById(`map-${this.state.currentLevel}`)).height
-        let w = parseInt(w_str.substring(0, w_str.length-2)),
-            h = parseInt(h_str.substring(0, h_str.length-2))
-        console.log(w_str,h_str,w,h)
+        this.bgOffset()
+
+        // this.annotateRef = React.createRef()
+        // let w_str = window.getComputedStyle(document.getElementById(`map-${this.state.currentLevel}`)).width,
+        //     h_str = window.getComputedStyle(document.getElementById(`map-${this.state.currentLevel}`)).height
+        // let w = parseInt(w_str.substring(0, w_str.length-2)),
+        //     h = parseInt(h_str.substring(0, h_str.length-2))
+        // console.log(w_str,h_str,w,h)
         // let w = parseInt(w_str), h = parseInt(h_str)
-        this.setState({annotateDimension: {w:w, h:h}})
-        console.log(window.getComputedStyle(document.getElementById(`map-${this.state.currentLevel}`)).getPropertyValue('height'))
+        // this.setState({annotateDimension: {w:w, h:h}})
+        // console.log(window.getComputedStyle(document.getElementById(`map-${this.state.currentLevel}`)).getPropertyValue('height'))
         // console.log(document.getElementById("canvas"))
         // console.log(document.getElementById(`map-${this.state.currentLevel}`).style)
     }
@@ -72,7 +77,7 @@ class Map extends React.Component{
         e.preventDefault();
         let scale = this.state.scale
         scale += e.deltaY * -0.05
-        scale = Math.min(Math.max(.5, scale), 2.5)
+        scale = Math.min(Math.max(.3, scale), 2.5)
 
         this.setState( {scale: scale})
         console.log(this.state.scale, e.deltaY)
@@ -138,9 +143,9 @@ class Map extends React.Component{
     }
 
 
-
-    syncOffset(){
-
+    bgOffset(){
+        let bgoffset = mapEntries.find(loc=>loc.location==this.props.location).bgOffset
+        this.setState({bgOffset: bgoffset})
     }
 
     changeAnnotateOffset = (position)=>{
@@ -153,8 +158,26 @@ class Map extends React.Component{
     }
 
     loadMapBg(){
-        let pathname = "../../resources/maps/" + this.state.location + "/"
-        return <img draggable={false} className={"map-content map-bg"} src={pathname} />
+        if (!this.state.tactical) {
+            let loc = mapEntries.find(m => m.location == this.props.location).levels
+            let bgLevel = loc.find(l => l.background==true).index
+            let pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + bgLevel + ".jpg"
+            return <img draggable={false} className={"map-content map-bg"} src={pathname}/>
+        }
+    }
+
+    loadMapTop(pathname, level){
+        let style
+        if (!this.state.tactical && !mapEntries.find(m=>m.location==this.props.location).levels.find(l=>l.index==level).hasOwnProperty("background")){
+            style = {transform: "translate("+this.state.bgOffset.x + "px," + this.state.bgOffset.y + "px)"}
+        }
+        return (
+            <img id={`map-${level}`}
+                 style={style}
+                 draggable={false}
+                 className={"map-content"}
+                 src={pathname} />
+        )
     }
 
     loadMapImg(level){
@@ -162,18 +185,18 @@ class Map extends React.Component{
         switch(this.state.panels){
             default: scale = 1; break;
             case '1': scale = 1; break;
-            case '2': scale = 0.5; break;
-            case '4': scale = 0.25; break;
+            case '2': scale = 0.7; break;
+            case '4': scale = 0.5; break;
         }
-        if (this.state.tactical){
-            pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + "-t" + ".jpg"
+        if (this.state.tactical){ // normal img width + height
+            pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + "-t.jpg"
             width = mapEntries.find(m => m.location == this.props.location).tacMapDimension.width
             height = mapEntries.find(m => m.location == this.props.location).tacMapDimension.height
         }
-        else{
+        else{ // background img width + height
             pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + ".jpg"
-            width = mapEntries.find(m => m.location == this.props.location).orgMapDimension.width
-            height = mapEntries.find(m => m.location == this.props.location).orgMapDimension.height
+            width = mapEntries.find(m => m.location == this.props.location).bgMapDimension.width
+            height = mapEntries.find(m => m.location == this.props.location).bgMapDimension.height
         }
         return(
             <Draggable
@@ -183,13 +206,15 @@ class Map extends React.Component{
                 disabled={!this.state.movable}
             >
                 <div>
+
                 <div
                     style={{width: width, height: height, transform: 'scale('+ this.state.scale*scale + ')'}}
                     onWheel={(e)=>{this.scrollToZoom(e)}}
                     className={"map"}
                 >
+                    {this.loadMapBg()}
                     {this.loadAnnotate()}
-                    <img id={`map-${level}`} draggable={false} className={"map-content"} src={pathname} />
+                    {this.loadMapTop(pathname, level)}
                 </div>
                 </div>
             </Draggable>
@@ -320,6 +345,7 @@ class Map extends React.Component{
 
     changeLevel(level){
         this.setState({currentLevel: level})
+        this.bgOffset()
     }
 
     changeTacticalMode(){
@@ -345,7 +371,6 @@ class Map extends React.Component{
                     changeMovable={this.changeMovable}
                     changeLevel={this.changeLevel}
                     recenter={this.recenter}
-                    syncOffset={this.syncOffset}
                     switchAnnotateMode={this.switchAnnotateMode}
                     panels={this.state.panels}
                     panelHandler={this.setPanelNo}

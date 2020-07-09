@@ -15,7 +15,6 @@ class Sidebar extends React.Component {
         }
         this.changeLevel = this.props.changeLevel
         this.changeTacticalMode = this.props.tacticalModeHandler
-        this.syncOffset = this.props.syncOffset
         this.loadFloorButtons = this.loadFloorButtons.bind(this)
         this.selectFloor = this.selectFloor.bind(this)
         this.listPanels = this.listPanels.bind(this)
@@ -48,7 +47,6 @@ class Sidebar extends React.Component {
                     items.push(
                         <div key={it.index} className={"lButton"} onClick={(e) => {
                             this.selectFloor(e, it.index);
-                            this.syncOffset()
                         }}>{it.name}</div>
                     )
                 }

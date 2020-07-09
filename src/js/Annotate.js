@@ -57,7 +57,7 @@ class Annotate extends React.Component {
         }else{
             paths = this.state.path
         }
-        for (pathItem of this.state.path) {
+        for (pathItem of paths) {
             let pathProps = {
                 data: pathItem,
                 stroke: 'red',
@@ -80,10 +80,16 @@ class Annotate extends React.Component {
         } else {
             pathItem = 'L' + x + ' ' + y + ' '
         }
+        if (this.props.tactical){
+            let existPath = this.state.pathT
+            existPath[this.state.pathTCount] += (pathItem)
+            this.setState({pathT: existPath})
+        }
+        else{
         let existPath = this.state.path
-        // console.log(this.state.path)
         existPath[this.state.pathCount] += (pathItem)
         this.setState({path: existPath})
+        }
     }
 
 
@@ -146,7 +152,11 @@ class Annotate extends React.Component {
         let cursorX = e.evt.layerX
         let cursorY = e.evt.layerY
         if (this.state.painting) {
+            if (this.props.tactical){
+                this.setState({pathTCount: this.state.pathTCount + 1, painting:false})
+            }else{
             this.setState({pathCount: this.state.pathCount + 1, painting:false})
+            }
         }
 /*
         else if (this.props.movable){
@@ -167,7 +177,7 @@ class Annotate extends React.Component {
 
     clearPoints(){
         console.log("clear paths")
-        if (this.state.tactical) {
+        if (this.props.tactical) {
             this.setState({pathT: [],pathTCount: 0})
         }else{
             this.setState({path:[], pathCount:0})

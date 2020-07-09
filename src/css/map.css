@@ -1,6 +1,8 @@
 .map-wrapper{
     border: white solid 1px;
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .panel-wrapper{
@@ -16,12 +18,18 @@
     /*position: relative;*/
     /*top: -25px;*/
     /*left: -25px;*/
-    z-index: 2;
 }
 
 .map-content{
+    position: absolute;
+    z-index: 3;
+}
+
+.map-bg{
     width: 100%;
     height: 100%;
+    position:absolute;
+    z-index: 2;
 }
 
 .levelChooser{

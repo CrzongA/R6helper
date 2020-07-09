@@ -7,6 +7,7 @@ const mapEntries =
         tacticalLevelCount:3,
         tacticalLowestLevel:0,
         bgMapDimension:{width:2560, height:1440},
+        bgOffset:{x:674, y:178},
         orgMapDimension:{width:1175, height:1032},
         tacMapDimension:{width:2309, height:1732},
         levels: [
@@ -22,6 +23,10 @@ const mapEntries =
         lowestLevel: 1,
         tacticalLevelCount:2,
         tacticalLowestLevel:1,
+        bgMapDimension: {width: 2560, height: 1440},
+        bgOffset: {x:915, y:185},
+        orgMapDimension: {width:786, height: 753},
+        tacMapDimension: {width: 2309, height: 1732},
         levels: [
             {index: 1, name: "1st Floor", background:true, tactical:true},
             {index: 2, name: "2nd Floor", tactical:true},
