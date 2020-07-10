@@ -10,11 +10,12 @@ class Annotate extends React.Component {
             panels: this.props.panels,
             cursorCoordinates: {lx: 0, ly: 0},
             path: [''],
+            pathT:[''],
             pathCount: 0,
+            pathTCount: 0,
             prevMoveXY:{x:0, y:0},
             prevOffset: {x:0,y:0},
             offset: {x:0,y:0},
-
             painting:false
         }
         this.draw = this.draw.bind(this)
@@ -50,8 +51,13 @@ class Annotate extends React.Component {
     }
 
     draw() {
-        let pathItem, allItems = [], i = 0;
-        for (pathItem of this.state.path) {
+        let pathItem, paths, allItems = [], i = 0;
+        if (this.props.tactical){
+            paths = this.state.pathT
+        }else{
+            paths = this.state.path
+        }
+        for (pathItem of paths) {
             let pathProps = {
                 data: pathItem,
                 stroke: 'red',
@@ -74,10 +80,16 @@ class Annotate extends React.Component {
         } else {
             pathItem = 'L' + x + ' ' + y + ' '
         }
+        if (this.props.tactical){
+            let existPath = this.state.pathT
+            existPath[this.state.pathTCount] += (pathItem)
+            this.setState({pathT: existPath})
+        }
+        else{
         let existPath = this.state.path
-        // console.log(this.state.path)
         existPath[this.state.pathCount] += (pathItem)
         this.setState({path: existPath})
+        }
     }
 
 
@@ -140,7 +152,11 @@ class Annotate extends React.Component {
         let cursorX = e.evt.layerX
         let cursorY = e.evt.layerY
         if (this.state.painting) {
+            if (this.props.tactical){
+                this.setState({pathTCount: this.state.pathTCount + 1, painting:false})
+            }else{
             this.setState({pathCount: this.state.pathCount + 1, painting:false})
+            }
         }
 /*
         else if (this.props.movable){
@@ -159,9 +175,13 @@ class Annotate extends React.Component {
         this.props.changeMoving(false)
     }
 
-    clearPoints = (e) => {
+    clearPoints(){
         console.log("clear paths")
-        this.setState({path:[]})
+        if (this.props.tactical) {
+            this.setState({pathT: [],pathTCount: 0})
+        }else{
+            this.setState({path:[], pathCount:0})
+        }
     }
 
     loadPanels(){
