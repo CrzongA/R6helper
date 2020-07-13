@@ -33,6 +33,7 @@ class Map extends React.Component{
             annotateRef:'',
             annotateDimension:{w:0, h:0},
             opsMenuDisplay: "none",
+            selectedOps: {attack: [], defense: []},
         }
         this.maps = mapEntries
         this.loadMapImg = this.loadMapImg.bind(this)
@@ -51,16 +52,18 @@ class Map extends React.Component{
         this.bgOffset = this.bgOffset.bind(this)
         this.switchAnnotateMode = this.switchAnnotateMode.bind(this)
         this.setPanelNo = this.setPanelNo.bind(this)
+        this.setMap = this.setMap.bind(this)
         this.loadIconSVG = this.loadIconSVG.bind(this)
         this.setOpsMenuDisplay = this.setOpsMenuDisplay.bind(this)
         this.loadMapBg = this.loadMapBg.bind(this)
         this.loadMapTop = this.loadMapTop.bind(this)
+        this.setSelectedOps = this.setSelectedOps.bind(this)
     }
 
     componentDidMount() {
         this.bgOffset()
 
-        // this.annotateRef = React.createRef()
+        this.annotateRef = React.createRef()
         // let w_str = window.getComputedStyle(document.getElementById(`map-${this.state.currentLevel}`)).width,
         //     h_str = window.getComputedStyle(document.getElementById(`map-${this.state.currentLevel}`)).height
         // let w = parseInt(w_str.substring(0, w_str.length-2)),
@@ -85,6 +88,17 @@ class Map extends React.Component{
 
     setPanelNo(NOPanel){
         this.setState({panels: NOPanel})
+    }
+
+    setMap(map){
+        console.log(mapEntries.find(i=>i.location==map).lowestLevel)
+        this.setState({
+            location: map,
+            minLevel: mapEntries.find(i=>i.location==map).lowestLevel,
+            levelCount:mapEntries.find(i=>i.location==map).levelCount,
+            tMinLevel:mapEntries.find(i=>i.location==map).tacticalLowestLevel,
+            tLevelCount:mapEntries.find(i=>i.location==map).tacticalLevelCount,
+        })
     }
 
 /*    handleAnnotateRef(r){
@@ -144,7 +158,7 @@ class Map extends React.Component{
 
 
     bgOffset(){
-        let bgoffset = mapEntries.find(loc=>loc.location==this.props.location).bgOffset
+        let bgoffset = mapEntries.find(loc=>loc.location==this.state.location).bgOffset
         this.setState({bgOffset: bgoffset})
     }
 
@@ -159,7 +173,7 @@ class Map extends React.Component{
 
     loadMapBg(){
         if (!this.state.tactical) {
-            let loc = mapEntries.find(m => m.location == this.props.location).levels
+            let loc = mapEntries.find(m => m.location == this.state.location).levels
             let bgLevel = loc.find(l => l.background==true).index
             let pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + bgLevel + ".jpg"
             return <img draggable={false} className={"map-content map-bg"} src={pathname}/>
@@ -168,7 +182,7 @@ class Map extends React.Component{
 
     loadMapTop(pathname, level){
         let style
-        if (!this.state.tactical && !mapEntries.find(m=>m.location==this.props.location).levels.find(l=>l.index==level).hasOwnProperty("background")){
+        if (!this.state.tactical && !mapEntries.find(m=>m.location==this.state.location).levels.find(l=>l.index==level).hasOwnProperty("background")){
             style = {transform: "translate("+this.state.bgOffset.x + "px," + this.state.bgOffset.y + "px)"}
         }
         return (
@@ -181,22 +195,30 @@ class Map extends React.Component{
     }
 
     loadMapImg(level){
-        let pathname, width, height, scale=1
+        let pathname, width, height, scale=1, minlevel, levelcount
         switch(this.state.panels){
             default: scale = 1; break;
             case '1': scale = 1; break;
             case '2': scale = 0.7; break;
             case '4': scale = 0.5; break;
         }
+
         if (this.state.tactical){ // normal img width + height
             pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + "-t.jpg"
-            width = mapEntries.find(m => m.location == this.props.location).tacMapDimension.width
-            height = mapEntries.find(m => m.location == this.props.location).tacMapDimension.height
+            width = mapEntries.find(m => m.location == this.state.location).tacMapDimension.width
+            height = mapEntries.find(m => m.location == this.state.location).tacMapDimension.height
+            minlevel=this.state.tMinLevel
+            levelcount=this.state.tLevelCount
         }
         else{ // background img width + height
             pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + ".jpg"
-            width = mapEntries.find(m => m.location == this.props.location).bgMapDimension.width
-            height = mapEntries.find(m => m.location == this.props.location).bgMapDimension.height
+            width = mapEntries.find(m => m.location == this.state.location).bgMapDimension.width
+            height = mapEntries.find(m => m.location == this.state.location).bgMapDimension.height
+            minlevel=this.state.minLevel
+            levelcount=this.state.levelCount
+        }
+        if (level===undefined||level==null||(level<minlevel||level>minlevel+levelcount)){
+            return
         }
         return(
             <Draggable
@@ -223,7 +245,6 @@ class Map extends React.Component{
 
     loadPanels(){
         let res;
-        let leftLevel, rightLevel;
         if (this.state.panels==1){
             res =
             <div className={"panel-wrapper"} >
@@ -241,7 +262,7 @@ class Map extends React.Component{
             }
             else{
                 levels = this.state.levelCount
-                minLevel = this.state.tMinLevel
+                minLevel = this.state.minLevel
             }
             if (this.state.currentLevel<minLevel+levels-1){
                 leftLevel = this.state.currentLevel
@@ -263,27 +284,53 @@ class Map extends React.Component{
 
         }
         else if (this.state.panels==4){
-            if (this.state.currentLevel<this.state.minLevel+this.state.levelCount-1){
-                leftLevel = this.state.currentLevel
-                rightLevel = this.state.currentLevel+1
+            let leftTop, rightTop, leftBottom, rightBottom, minLevel, levelcount;
+            if(this.state.tactical){
+                levelcount=this.state.tLevelCount
+                minLevel = this.state.tMinLevel
             }
             else{
-                leftLevel = this.state.currentLevel-1
-                rightLevel = this.state.currentLevel
+                levelcount = this.state.levelCount
+                minLevel = this.state.minLevel
             }
+            if (this.state.currentLevel+2<minLevel+levelcount-1){
+                leftTop = this.state.currentLevel
+                rightTop = this.state.currentLevel+1
+                leftBottom = this.state.currentLevel+2
+                rightBottom = this.state.currentLevel+3
+            }
+            else if (this.state.currentLevel+1<minLevel+levelcount-1){
+                leftTop = this.state.currentLevel-1
+                rightTop = this.state.currentLevel
+                leftBottom = this.state.currentLevel+1
+                rightBottom = this.state.currentLevel+2
+            }
+            else if (this.state.currentLevel<minLevel+levelcount-1){
+                leftTop = this.state.currentLevel-2
+                rightTop = this.state.currentLevel-1
+                leftBottom = this.state.currentLevel
+                rightBottom = this.state.currentLevel+1
+            }
+            else if (this.state.currentLevel-1<minLevel+levelcount-1){
+                leftTop = this.state.currentLevel-3
+                rightTop = this.state.currentLevel-2
+                leftBottom = this.state.currentLevel-1
+                rightBottom = this.state.currentLevel
+            }
+            console.log(leftTop, rightTop, leftBottom, rightBottom)
             res =
                 <div className={"panel-wrapper"}>
                     <div className={"map-wrapper fourmaps"}>
-                        {this.loadMapImg(this.state.currentLevel)}
+                        {this.loadMapImg(leftTop)}
                     </div>
                     <div className={"map-wrapper fourmaps"}>
-                        {this.loadMapImg(this.state.level+1)}
+                        {this.loadMapImg(rightTop)}
                     </div>
                     <div className={"map-wrapper fourmaps"}>
-                        {this.loadMapImg(this.state.level+2)}
+                        {this.loadMapImg(leftBottom)}
                     </div>
                     <div className={"map-wrapper fourmaps"}>
-                        {this.loadMapImg(this.state.level+3)}
+                        {this.loadMapImg(rightBottom)}
                     </div>
                 </div>
         }
@@ -295,12 +342,12 @@ class Map extends React.Component{
         // let width=this.state.annotateDimension.w, height=this.state.annotateDimension.h
         let width,height
         if (this.state.tactical){
-            width = mapEntries.find(m => m.location == this.props.location).tacMapDimension.width
-            height = mapEntries.find(m => m.location == this.props.location).tacMapDimension.height
+            width = mapEntries.find(m => m.location == this.state.location).tacMapDimension.width
+            height = mapEntries.find(m => m.location == this.state.location).tacMapDimension.height
         }
         else {
-            width = mapEntries.find(m => m.location == this.props.location).orgMapDimension.width
-            height = mapEntries.find(m => m.location == this.props.location).orgMapDimension.height
+            width = mapEntries.find(m => m.location == this.state.location).bgMapDimension.width
+            height = mapEntries.find(m => m.location == this.state.location).bgMapDimension.height
         }
         let annotateArgs = {
             ref: this.annotateRef,
@@ -353,6 +400,10 @@ class Map extends React.Component{
         // console.log(!this.state.tactical, this.state.tactical)
     }
 
+    setSelectedOps(atts, defs){
+        this.setState({selectedOps:{attack:atts, defense:defs}})
+    }
+
     render() {
         let currentMapObj = mapEntries.find(item => item.location==this.state.location)
         return (
@@ -374,10 +425,15 @@ class Map extends React.Component{
                     switchAnnotateMode={this.switchAnnotateMode}
                     panels={this.state.panels}
                     panelHandler={this.setPanelNo}
+                    mapHandler={this.setMap}
                     handleOps={this.setOpsMenuDisplay}
                 />
                 {this.loadPanels()}
-                <R6props display={this.state.opsMenuDisplay}/>
+                <R6props
+                    display={this.state.opsMenuDisplay}
+                    setOps={this.setSelectedOps}
+                    selectedOps={this.state.selectedOps}
+                />
             </div>
         )
     }

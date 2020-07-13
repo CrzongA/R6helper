@@ -7,6 +7,15 @@
     z-index: 5;
 }
 
+.toolsWrapper{
+    position: absolute;
+    bottom: 0;
+    height: 10vh;
+    width: 100vw;
+    background: rgba(26, 26, 26, 0.8);
+    z-index:5;
+}
+
 .modeSwitches{
     float: right;
 }
@@ -22,6 +31,7 @@
     border: 1px solid black;
     background: black;
     color: white;
+    user-select: none;
     -moz-user-select: none;
 }
 
@@ -48,6 +58,8 @@
     color: white;
     text-align: center;
     vertical-align: middle;
+    user-select: none;
+    -moz-user-select: none;
 }
 
 .cButton:hover{

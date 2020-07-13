@@ -1,5 +1,5 @@
 import React from "react"
-
+import mapEntries from "./mapEntries"
 // import locations from "./mapEntries"
 
 class Sidebar extends React.Component {
@@ -8,17 +8,25 @@ class Sidebar extends React.Component {
         this.state = {
             position: "top",
             location: this.props.location,
-            levels: this.props.levels,
             currentLevel: 1,
             selectedGameMode: 'all',
-            panelsOption:[1, 2, 4]
+            panelsOptions:[1, 2, 4],
+            mapOptions:[],
         }
         this.changeLevel = this.props.changeLevel
         this.changeTacticalMode = this.props.tacticalModeHandler
         this.loadFloorButtons = this.loadFloorButtons.bind(this)
         this.selectFloor = this.selectFloor.bind(this)
-        this.listPanels = this.listPanels.bind(this)
+        this.listPanelOptions = this.listPanelOptions.bind(this)
+        this.listMapsOptions = this.listMapsOptions.bind(this)
         this.changePanel = this.changePanel.bind(this)
+        this.changeMap = this.changeMap.bind(this)
+    }
+
+    componentDidMount() {
+        let mapOptions = []
+        mapEntries.forEach(loc => mapOptions.push(loc.location) )
+        this.setState({mapOptions: mapOptions})
     }
 
     selectFloor = (e, ind) => {
@@ -26,12 +34,21 @@ class Sidebar extends React.Component {
         this.changeLevel(ind)
     }
 
-    listPanels(){
+
+    listPanelOptions(){
         let ret=[]
-        this.state.panelsOption.forEach((i)=> {
+        this.state.panelsOptions.forEach((i)=> {
                 ret.push(<option key={i} value={i}>{i}</option>)
             }
         )
+        return ret
+    }
+
+    listMapsOptions(){
+        let ret=[]
+        this.state.mapOptions.forEach(m => {
+            ret.push(<option key={m} value={m}>{m}</option>)
+        })
         return ret
     }
 
@@ -39,9 +56,13 @@ class Sidebar extends React.Component {
         this.props.panelHandler(e.target.value)
     }
 
+    changeMap(e){
+        this.props.mapHandler(e.target.value)
+    }
+
     loadFloorButtons() {
         let items = []
-        this.state.levels.forEach((it) => {
+        this.props.levels.forEach((it) => {
             if (this.props.tactical) {
                 if (it.tactical) {
                     items.push(
@@ -70,10 +91,14 @@ class Sidebar extends React.Component {
                             value={this.props.panels}
                             onChange={this.changePanel}
                     >
-                        {this.listPanels()}
+                        {this.listPanelOptions()}
                     </select>
-                    <select className={"locationSelector dd-selector"} name={"location"}>
-                        <option value={""}>placeholder</option>
+                    <select
+                        className={"locationSelector dd-selector"}
+                        name={"location"}
+                        onChange={this.changeMap}
+                    >
+                        {this.listMapsOptions()}
                     </select>
                     <select className={"gameModeSelector dd-selector"} name={"gameMode"}>
                         <option value={""}>placeholder</option>

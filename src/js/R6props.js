@@ -6,11 +6,15 @@ class R6props extends React.Component{
     constructor() {
         super();
         this.state = {
-            selectedOps: {attack: [], defense: []},
             opsCoords: [],
             opsProps: [],
+            maxOps: 27,
+
         }
         this.loadOps = this.loadOps.bind(this)
+        this.selectOp = this.selectOp.bind(this)
+        this.loadSelectedAtt = this.loadSelectedAtt.bind(this)
+        this.loadSelectedDef = this.loadSelectedDef.bind(this)
     }
 
 
@@ -20,15 +24,23 @@ class R6props extends React.Component{
             // console.log(ops[item].toSVG())
             if (ops[item].role=="Attacker" ) {
                 att.push(
-                    <div key={ops[item].id} className={"op"}>
-                        <div dangerouslySetInnerHTML={{__html: ops[item].toSVG()}}/>
-                    </div>
+                        <div
+                            key={ops[item].id}
+                            className={"op-inMenu"}
+                            style={{order:ops[item].index}}
+                            onClick={(e)=>{this.selectOp(e, ops[item].id, ops[item].role)}}
+                            dangerouslySetInnerHTML={{__html: ops[item].toSVG({class: "opSVG"})}}
+                        />
                 )
             }else if (ops[item].role=="Defender"){
                 def.push(
-                    <div key={ops[item].id} className={"op"}>
-                        <div dangerouslySetInnerHTML={{__html: ops[item].toSVG()}}/>
-                    </div>
+                    <div
+                        key={ops[item].id}
+                        className={"op-inMenu"}
+                        style={{order:ops[item].index}}
+                        onClick={(e)=>{this.selectOp(e, ops[item].id, ops[item].role)}}
+                        dangerouslySetInnerHTML={{__html: ops[item].toSVG({class: "opSVG"})}}
+                    />
                 )
 
             }
@@ -47,19 +59,84 @@ class R6props extends React.Component{
         )
     }
 
-    render(){
-        let icons=[]
-        Object.keys(ops).forEach(item => {
-            // console.log(ops[item].toSVG())
-            icons.push(
-                <div key={ops[item].id} className={"op"}>
-                    <div dangerouslySetInnerHTML={{__html:ops[item].toSVG()}}/>
-                </div>
+    selectOp(e, id, role){
+        id.toLowerCase()
+        let attackers = this.props.selectedOps.attack
+        let defenders = this.props.selectedOps.defense
+        if (attackers.includes(id)){
+
+        }
+        else if(defenders.includes(id)){
+
+        }
+        else{
+            if(role=="Attacker"){
+                if (!(attackers.length>=5))
+                attackers.push(id)
+                // console.log("selected "+id)
+            }
+            else if (role=="Defender"){
+                if (!(defenders.length>=5))
+                defenders.push(id)
+                // console.log("selected "+id)
+            }
+        }
+        this.props.setOps(attackers, defenders)
+    }
+
+    loadSelectedAtt(){
+        let ret=[]
+        this.props.selectedOps.attack.forEach(o => {
+            let op={}
+            Object.keys(ops).some(id => {
+                if (id==o){
+                    op=ops[id]
+                    // console.log(op)
+                }
+            })
+            ret.push(
+                <div key={op.index} className={"op-inSelected"} dangerouslySetInnerHTML={{__html: op.toSVG({class: "opSVG"})}}/>
+        )
+        })
+        // console.log("load att")
+        return(
+            <div className={"selectedOps selectedAtt"} >
+                {ret}
+            </div>
+        )
+    }
+
+    loadSelectedDef(){
+        let ret=[]
+        this.props.selectedOps.defense.forEach(o => {
+            let op = {}
+            Object.keys(ops).some(id => {
+                if (id == o) {
+                    op = ops[id]
+                    // console.log(op)
+                }
+            })
+            // console.log("load def")
+            ret.push(
+                <div key={op.index} className={"op-inSelected"}
+                     dangerouslySetInnerHTML={{__html: op.toSVG({class: "opSVG"})}}/>
             )
         })
         return(
-            <div style={{display:this.props.display}} className={"opSelectMenu"}>
-                {this.loadOps()}
+            <div className={"selectedOps selectedDef"} >
+                {ret}
+            </div>
+        )
+    }
+
+    render(){
+        return(
+            <div>
+                <div style={{display:this.props.display}} className={"opSelectMenu"}>
+                    {this.loadOps()}
+                </div>
+                {this.loadSelectedAtt()}
+                {this.loadSelectedDef()}
             </div>
         )
     }
