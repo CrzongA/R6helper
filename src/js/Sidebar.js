@@ -12,6 +12,7 @@ class Sidebar extends React.Component {
             selectedGameMode: 'all',
             panelsOptions:[1, 2, 4],
             mapOptions:[],
+            confirmClear:false
         }
         this.changeLevel = this.props.changeLevel
         this.changeTacticalMode = this.props.tacticalModeHandler
@@ -21,6 +22,8 @@ class Sidebar extends React.Component {
         this.listMapsOptions = this.listMapsOptions.bind(this)
         this.changePanel = this.changePanel.bind(this)
         this.changeMap = this.changeMap.bind(this)
+        this.switchClearPath = this.switchClearPath.bind(this)
+        this.confirmClearPath = this.confirmClearPath.bind(this)
     }
 
     componentDidMount() {
@@ -81,6 +84,24 @@ class Sidebar extends React.Component {
         return items
     }
 
+    switchClearPath(){
+        this.setState({confirmClear: !(this.state.confirmClear)})
+    }
+
+    confirmClearPath(){
+        let thisStyle={visibility:"hidden"}
+        if (this.state.confirmClear){
+            thisStyle={visibility: "visible",transform: "translate(0px,calc(-5vh - 10px))"}
+        }
+        return(
+            <div
+                style={thisStyle}
+                className={"confirmButton"}
+                onClick={()=>{this.props.handleClearPoints();this.switchClearPath()}}>
+                Confirm?
+            </div>
+        )
+    }
 
     render() {
         return (
@@ -124,8 +145,11 @@ class Sidebar extends React.Component {
                     <div className={"modeChooser cButton"} onClick={this.props.switchAnnotateMode}>
                         <div>{this.props.annotateMode}</div>
                     </div>
-                    <div className={"clearPointsButton cButton"} onClick={this.props.handleClearPoints}>
-                        <div>Clear</div>
+                    <div className={"clearButtonWrapper"}>
+                        <div className={"clearButton"} onClick={this.switchClearPath}>
+                            <div>Clear</div>
+                        </div>
+                        {this.confirmClearPath()}
                     </div>
                     <div className={"opsChooser cButton"} onClick={this.props.handleOps}>Operators & Props</div>
                 </div>

@@ -119,12 +119,10 @@ class Map extends React.Component{
 
     clearPaths(){
         console.log("clear paths")
-        if (this.state.tactical) {
-            this.setState({paths:{}})
-        }else{
-            this.setState({paths:{}})
-        }
+        this.initPathsPlaceholder()
     }
+
+
 
     presetSVGid(){
         return
@@ -477,7 +475,7 @@ class Map extends React.Component{
                     annotateMode={this.state.annotateMode}
                     annotateDisplay={this.state.annotateDisplay}
                     annotateState={this.state.annotateState}
-                    handleClearPoints={this.annotateClearPoints}
+                    handleClearPoints={this.clearPaths}
                     tacticalModeHandler={this.changeTacticalMode}
                     tactical={this.state.tactical}
                     movable={this.state.movable}
