@@ -51,13 +51,13 @@ class Annotate extends React.Component {
     }
 
     draw() {
-        let pathItem, paths, allItems = [], i = 0;
-        if (this.props.tactical){
-            paths = this.state.pathT
-        }else{
-            paths = this.state.path
-        }
-        for (pathItem of paths) {
+        let pathItem, paths = this.props.paths, allItems = [], i = 0;
+        // if (this.props.tactical){
+        //     paths = this.state.pathT
+        // }else{
+        //     paths = this.state.path
+        // }
+        for (pathItem of paths.items) {
             let pathProps = {
                 data: pathItem,
                 stroke: 'red',
@@ -80,19 +80,18 @@ class Annotate extends React.Component {
         } else {
             pathItem = 'L' + x + ' ' + y + ' '
         }
-        if (this.props.tactical){
-            let existPath = this.state.pathT
-            existPath[this.state.pathTCount] += (pathItem)
-            this.setState({pathT: existPath})
-        }
-        else{
-        let existPath = this.state.path
-        existPath[this.state.pathCount] += (pathItem)
-        this.setState({path: existPath})
-        }
+        // if (this.props.tactical){
+        //     let existPath = this.state.pathT
+        //     existPath[this.state.pathTCount] += (pathItem)
+        //     this.setState({pathT: existPath})
+        // }
+        // else{
+        //     let existPath = this.state.path
+        //     existPath[this.state.pathCount] += (pathItem)
+        //     this.setState({path: existPath})
+        // }
+        this.props.updatePaths(pathItem,this.props.level)
     }
-
-
 
     closePath() {
         let existPath = this.state.path
@@ -152,11 +151,8 @@ class Annotate extends React.Component {
         let cursorX = e.evt.layerX
         let cursorY = e.evt.layerY
         if (this.state.painting) {
-            if (this.props.tactical){
-                this.setState({pathTCount: this.state.pathTCount + 1, painting:false})
-            }else{
-            this.setState({pathCount: this.state.pathCount + 1, painting:false})
-            }
+            this.props.updatePathCount(this.props.level)
+            this.setState({painting:false})
         }
 /*
         else if (this.props.movable){
@@ -170,6 +166,7 @@ class Annotate extends React.Component {
     }
 
     handleMouseLeave = (e) => {
+        this.props.updatePathCount(this.props.level)
         this.setState({painting: false, prevMoveXY:{x:0, y:0}, prevOffset:this.props.mapOffset})
         this.props.changeMapPrevOffset(this.props.mapOffset)
         this.props.changeMoving(false)

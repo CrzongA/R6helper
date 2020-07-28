@@ -1,6 +1,6 @@
 import React from "react"
-import r6operators from "r6operators"
 import ops from "r6operators";
+import ops_json from "./operators.json"
 
 class R6props extends React.Component{
     constructor() {
@@ -17,6 +17,14 @@ class R6props extends React.Component{
         this.loadSelectedDef = this.loadSelectedDef.bind(this)
     }
 
+    componentDidMount() {
+        // console.log(ops_json)
+    }
+
+    toSVG(op){
+        let pathname = "../../resources/operators/"+op+".svg"
+        return
+    }
 
     loadOps(){
         let att=[], def=[]

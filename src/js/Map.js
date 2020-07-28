@@ -34,6 +34,7 @@ class Map extends React.Component{
             annotateDimension:{w:0, h:0},
             opsMenuDisplay: "none",
             selectedOps: {attack: [], defense: []},
+            paths:{normal:[{level:"1",count:0,items:[]}],tactical:[{level:"1",count:0,items:[]}]}
         }
         this.maps = mapEntries
         this.loadMapImg = this.loadMapImg.bind(this)
@@ -57,23 +58,76 @@ class Map extends React.Component{
         this.setOpsMenuDisplay = this.setOpsMenuDisplay.bind(this)
         this.loadMapBg = this.loadMapBg.bind(this)
         this.loadMapTop = this.loadMapTop.bind(this)
+        this.updatePaths = this.updatePaths.bind(this)
+        this.clearPaths = this.clearPaths.bind(this)
+        this.updatePathCount = this.updatePathCount.bind(this)
         this.setSelectedOps = this.setSelectedOps.bind(this)
     }
 
     componentDidMount() {
         this.bgOffset()
-
+        this.initPathsPlaceholder()
         this.annotateRef = React.createRef()
-        // let w_str = window.getComputedStyle(document.getElementById(`map-${this.state.currentLevel}`)).width,
-        //     h_str = window.getComputedStyle(document.getElementById(`map-${this.state.currentLevel}`)).height
-        // let w = parseInt(w_str.substring(0, w_str.length-2)),
-        //     h = parseInt(h_str.substring(0, h_str.length-2))
-        // console.log(w_str,h_str,w,h)
-        // let w = parseInt(w_str), h = parseInt(h_str)
-        // this.setState({annotateDimension: {w:w, h:h}})
-        // console.log(window.getComputedStyle(document.getElementById(`map-${this.state.currentLevel}`)).getPropertyValue('height'))
-        // console.log(document.getElementById("canvas"))
-        // console.log(document.getElementById(`map-${this.state.currentLevel}`).style)
+    }
+
+    initPathsPlaceholder(){
+        let pathsPlaceholder={normal:[],tactical:[]}
+        for (let i=this.state.tMinLevel; i<this.state.tMinLevel+this.state.tLevelCount;i++) {
+            pathsPlaceholder.tactical.push({level: i, count: 0, items: []})
+        }
+        for (let i=this.state.minLevel; i<this.state.minLevel+this.state.levelCount;i++){
+            pathsPlaceholder.normal.push({level:i,count:0,items:[]})
+        }
+        this.setState({paths:pathsPlaceholder})
+    }
+
+    updatePaths(data, level){
+            let existPath = this.state.paths
+            if (this.state.tactical) {
+                let currentLevelPath = existPath.tactical.find(i=>i.level==level)
+                // if (!currentLevelPath){
+                //     currentLevelPath={level:level,count:0,items:[]}
+                //     existPath.tactical.push(currentLevelPath)
+                // }
+                currentLevelPath.items[currentLevelPath.count] += data
+                this.setState({paths:existPath})
+            }
+            else {
+                let currentLevelPath = existPath.normal.find(i=>i.level==level)
+                // if (!currentLevelPath){
+                //     currentLevelPath={level:level,count:0,items:[]}
+                //     existPath.normal.push(currentLevelPath)
+                // }
+                currentLevelPath.items[currentLevelPath.count] += data
+                this.setState({paths:existPath})
+            }
+    }
+
+    updatePathCount(level){
+        let currentLevelPath,existPaths
+        if (this.state.tactical) {
+            existPaths = this.state.paths
+            currentLevelPath = existPaths.tactical.find(i => i.level == level)
+        }
+        else {
+            existPaths = this.state.paths
+            currentLevelPath = existPaths.normal.find(i => i.level == level)
+        }
+        currentLevelPath.count +=1
+        this.setState({paths: existPaths})
+    }
+
+    clearPaths(){
+        console.log("clear paths")
+        if (this.state.tactical) {
+            this.setState({paths:{}})
+        }else{
+            this.setState({paths:{}})
+        }
+    }
+
+    presetSVGid(){
+        return
     }
 
     scrollToZoom(e){
@@ -90,21 +144,18 @@ class Map extends React.Component{
         this.setState({panels: NOPanel})
     }
 
+    // Handler for changing the map to a different location
     setMap(map){
-        console.log(mapEntries.find(i=>i.location==map).lowestLevel)
+        this.initPathsPlaceholder()
         this.setState({
             location: map,
             minLevel: mapEntries.find(i=>i.location==map).lowestLevel,
             levelCount:mapEntries.find(i=>i.location==map).levelCount,
             tMinLevel:mapEntries.find(i=>i.location==map).tacticalLowestLevel,
             tLevelCount:mapEntries.find(i=>i.location==map).tacticalLevelCount,
+            currentLevel: 1,
         })
     }
-
-/*    handleAnnotateRef(r){
-        // this.setState({annotateRef: r.current})
-        this.annotateRef = r
-    }*/
 
     annotateDisplaySwitch(){
         console.log("switch annotate")
@@ -235,7 +286,7 @@ class Map extends React.Component{
                     className={"map"}
                 >
                     {this.loadMapBg()}
-                    {this.loadAnnotate()}
+                    {this.loadAnnotate(level)}
                     {this.loadMapTop(pathname, level)}
                 </div>
                 </div>
@@ -338,16 +389,18 @@ class Map extends React.Component{
         return res
     }
 
-    loadAnnotate(){
+    loadAnnotate(level){
         // let width=this.state.annotateDimension.w, height=this.state.annotateDimension.h
-        let width,height
+        let width,height,paths
         if (this.state.tactical){
             width = mapEntries.find(m => m.location == this.state.location).tacMapDimension.width
             height = mapEntries.find(m => m.location == this.state.location).tacMapDimension.height
+            paths = this.state.paths.tactical.find(i => i.level==level)
         }
         else {
             width = mapEntries.find(m => m.location == this.state.location).bgMapDimension.width
             height = mapEntries.find(m => m.location == this.state.location).bgMapDimension.height
+            paths = this.state.paths.normal.find(i => i.level==level)
         }
         let annotateArgs = {
             ref: this.annotateRef,
@@ -366,7 +419,12 @@ class Map extends React.Component{
             movable: this.state.movable,
             moving: this.state.moving,
             mode: this.state.annotateMode,
-            tactical: this.state.tactical
+            tactical: this.state.tactical,
+            level: level,
+            paths: paths,
+            updatePaths: this.updatePaths,
+            updatePathCount: this.updatePathCount,
+            clearPaths: this.clearPaths
         }
         let res =
                 <Annotate {...annotateArgs}/>
@@ -397,6 +455,10 @@ class Map extends React.Component{
 
     changeTacticalMode(){
         this.setState({tactical: !this.state.tactical})
+        let invalidLevel = (this.state.currentLevel>=this.state.tMinLevel+this.state.tLevelCount)
+        if (!(this.state.tactical) && invalidLevel){
+            this.setState({currentLevel: 1})
+        }
         // console.log(!this.state.tactical, this.state.tactical)
     }
 
