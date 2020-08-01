@@ -10,6 +10,7 @@
     position: absolute;
     z-index: 1;
     display: flex;
+    flex-flow: row wrap;
     width: 100vw;
     height: 100vh;
 }
@@ -42,21 +43,23 @@
 }
 
 .onemap{
-    float: left;
+    flex: 1 0 49%;
+    /*float: left;*/
     width:100vw;
     height: 100vh;
     overflow: hidden;
 }
 
 .twomaps{
-    float: left;
+    flex: 1 0 49%;
+    /*float: left;*/
     width:50vw;
     height: 100vh;
     overflow: hidden;
 }
 
 .fourmaps{
-    flex: 1 0 50%;
+    flex: 1 0 49%;
     width:50vw;
     height:50vh;
     overflow:hidden;

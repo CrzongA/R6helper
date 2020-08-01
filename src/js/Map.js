@@ -144,7 +144,6 @@ class Map extends React.Component{
 
     // Handler for changing the map to a different location
     setMap(map){
-        this.initPathsPlaceholder()
         this.setState({
             location: map,
             minLevel: mapEntries.find(i=>i.location==map).lowestLevel,
@@ -153,6 +152,7 @@ class Map extends React.Component{
             tLevelCount:mapEntries.find(i=>i.location==map).tacticalLevelCount,
             currentLevel: 1,
         })
+        this.initPathsPlaceholder()
     }
 
     annotateDisplaySwitch(){

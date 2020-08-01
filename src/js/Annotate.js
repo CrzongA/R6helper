@@ -52,11 +52,6 @@ class Annotate extends React.Component {
 
     draw() {
         let pathItem, paths = this.props.paths, allItems = [], i = 0;
-        // if (this.props.tactical){
-        //     paths = this.state.pathT
-        // }else{
-        //     paths = this.state.path
-        // }
         for (pathItem of paths.items) {
             let pathProps = {
                 data: pathItem,
