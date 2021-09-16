@@ -6,7 +6,7 @@ import "../css/main.css"
 import "../css/map.css"
 import "../css/sidebar.css"
 import "../css/annotate.css"
-import "../css/operators.css"
+import "../css/r6props.css"
 
 class App extends React.Component{
     constructor(){

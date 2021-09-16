@@ -106,7 +106,7 @@ class Sidebar extends React.Component {
     render() {
         return (
             <div className={"sidebar"}>
-                <div className={"sidebar-top"}>
+                <div className={"sidebar-top sidebar-element"}>
                     <select className={"panelSelector dd-selector"}
                             name={"NOPanels"}
                             value={this.props.panels}
@@ -141,7 +141,7 @@ class Sidebar extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className={"toolsWrapper"} style={{display: this.props.annotateDisplay}}>
+                <div className={"toolsWrapper sidebar-element"} style={{display: this.props.annotateDisplay}}>
                     <div className={"modeChooser cButton"} onClick={this.props.switchAnnotateMode}>
                         <div>{this.props.annotateMode}</div>
                     </div>
@@ -151,7 +151,12 @@ class Sidebar extends React.Component {
                         </div>
                         {this.confirmClearPath()}
                     </div>
-                    <div className={"opsChooser cButton"} onClick={this.props.handleOps}>Operators & Props</div>
+                    <div className={"opsChooser cButton"} onClick={this.props.handleOps}>
+                        Operators
+                    </div>
+                    <div className={"gadgetChooser cButton"} onClick={this.props.handleGadgets}>
+                        Gadgets
+                    </div>
                 </div>
             </div>
         )

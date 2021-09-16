@@ -4,7 +4,9 @@ import Sidebar from "./Sidebar";
 import Annotate from "./Annotate"
 import R6props from "./R6props"
 import mapEntries from "./mapEntries"
-import ops from "r6operators"
+
+var zoomMax = 0.0005
+var zoomMin = 2.2
 
 class Map extends React.Component{
     constructor(props) {
@@ -33,8 +35,10 @@ class Map extends React.Component{
             annotateRef:'',
             annotateDimension:{w:0, h:0},
             opsMenuDisplay: "none",
+            gadgetsMenuDisplay: "none",
             selectedOps: {attack: [], defense: []},
-            paths:{normal:[{level:"1",count:0,items:[]}],tactical:[{level:"1",count:0,items:[]}]}
+            paths:{normal:[{level:"1",count:0,items:[]}],tactical:[{level:"1",count:0,items:[]}]},
+            gadgetItems:{normal:[{level:"1", count:0, items:[]}], tactical:[{level:"1", count:0, items:[]}]}
         }
         this.maps = mapEntries
         this.loadMapImg = this.loadMapImg.bind(this)
@@ -56,6 +60,7 @@ class Map extends React.Component{
         this.setMap = this.setMap.bind(this)
         this.loadIconSVG = this.loadIconSVG.bind(this)
         this.setOpsMenuDisplay = this.setOpsMenuDisplay.bind(this)
+        this.setGadgetsMenuDisplay = this.setGadgetsMenuDisplay.bind(this)
         this.loadMapBg = this.loadMapBg.bind(this)
         this.loadMapTop = this.loadMapTop.bind(this)
         this.updatePaths = this.updatePaths.bind(this)
@@ -122,7 +127,30 @@ class Map extends React.Component{
         this.initPathsPlaceholder()
     }
 
+    setOpsMenuDisplay(){
+        if (this.state.opsMenuDisplay == "none"){
+            this.setState({opsMenuDisplay: "flex"})
+        }else{
+            this.setState({opsMenuDisplay: "none"})
+        }
+    }
+    setGadgetsMenuDisplay(){
+        if (this.state.gadgetsMenuDisplay == "none"){
+            this.setState({gadgetsMenuDisplay: "flex"})
+        }else{
+            this.setState({gadgetsMenuDisplay: "none"})
+        }
+        console.log('gadget menu')
+    }
 
+    createOpIcon(id){
+
+    }
+
+    createGadget(type, ){
+
+        // this.setState()
+    }
 
     presetSVGid(){
         return
@@ -131,8 +159,8 @@ class Map extends React.Component{
     scrollToZoom(e){
         e.preventDefault();
         let scale = this.state.scale
-        scale += e.deltaY * -0.05
-        scale = Math.min(Math.max(.3, scale), 2.5)
+        scale += e.deltaY * -zoomMax
+        scale = Math.min(Math.max(.3, scale), zoomMin)
 
         this.setState( {scale: scale})
         console.log(this.state.scale, e.deltaY)
@@ -434,14 +462,6 @@ class Map extends React.Component{
         return {__html: ret}
     }
 
-    setOpsMenuDisplay(){
-        if (this.state.opsMenuDisplay == "none"){
-            this.setState({opsMenuDisplay: "flex"})
-        }else{
-            this.setState({opsMenuDisplay: "none"})
-        }
-    }
-
     recenter = (e) => {
         this.setState({mapOffset:{x:0, y:0}})
     }
@@ -487,10 +507,12 @@ class Map extends React.Component{
                     panelHandler={this.setPanelNo}
                     mapHandler={this.setMap}
                     handleOps={this.setOpsMenuDisplay}
+                    handleGadgets={this.setGadgetsMenuDisplay}
                 />
                 {this.loadPanels()}
                 <R6props
-                    display={this.state.opsMenuDisplay}
+                    gadgetSelectDisplay={this.state.gadgetsMenuDisplay}
+                    opDisplay={this.state.opsMenuDisplay}
                     setOps={this.setSelectedOps}
                     selectedOps={this.state.selectedOps}
                 />

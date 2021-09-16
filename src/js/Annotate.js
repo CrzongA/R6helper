@@ -21,13 +21,13 @@ class Annotate extends React.Component {
         this.draw = this.draw.bind(this)
         this.addPoint = this.addPoint.bind(this)
         this.closePath = this.closePath.bind(this)
+        this.updateCursor = this.updateCursor.bind(this)
+        this.clearPoints = this.clearPoints.bind(this)
+        this.loadPanels = this.loadPanels.bind(this)
         this.handleMouseDown = this.handleMouseDown.bind(this)
         this.handleMouseLeave = this.handleMouseLeave.bind(this)
         this.handleMouseMove = this.handleMouseMove.bind(this)
         this.handleMouseUp = this.handleMouseUp.bind(this)
-        this.updateCursor = this.updateCursor.bind(this)
-        this.clearPoints = this.clearPoints.bind(this)
-        this.loadPanels = this.loadPanels.bind(this)
 
     }
 
@@ -97,21 +97,10 @@ class Annotate extends React.Component {
     handleMouseDown = (e) => {
         let cursorX = e.evt.layerX
         let cursorY = e.evt.layerY
-        // console.log("click "+ cursorX + " "+ cursorY)
-        // console.log(e.currentTarget, e.target.content.className)
-        // console.log(e.evt.screenX, e.evt.screenY)
         if (!this.props.movable && this.props.mode=="draw") {
             this.setState({painting: true})
             this.addPoint(cursorX+this.props.annotateOffset.x, cursorY+this.props.annotateOffset.y, true)
         }
-/*
-        else if (this.props.movable){
-            this.setState({prevMoveXY:{x:cursorX, y:cursorY}})
-            // this.props.dragHandler(null, {x:cursorX, y:cursorY})
-            this.props.changeMoving(true)
-        }
-*/
-
     }
 
     handleMouseMove = (e) => {
