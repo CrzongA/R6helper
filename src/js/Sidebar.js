@@ -71,13 +71,13 @@ class Sidebar extends React.Component {
                     items.push(
                         <div key={it.index} className={"lButton"} onClick={(e) => {
                             this.selectFloor(e, it.index);
-                        }}>{it.name}</div>
+                        }}><p>{it.name}</p></div>
                     )
                 }
             } else {
                 items.push(
                     <div key={it.index} className={"lButton"}
-                         onClick={(e) => this.selectFloor(e, it.index)}>{it.name}</div>
+                         onClick={(e) => this.selectFloor(e, it.index)}><p>{it.name}</p></div>
                 )
             }
         })
@@ -146,7 +146,7 @@ class Sidebar extends React.Component {
                         <div>{this.props.annotateMode}</div>
                     </div>
                     <div className={"clearButtonWrapper"}>
-                        <div className={"clearButton"} onClick={this.switchClearPath}>
+                        <div className={"clearButton cButton"} onClick={this.switchClearPath}>
                             <div>Clear</div>
                         </div>
                         {this.confirmClearPath()}

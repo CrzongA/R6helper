@@ -30,6 +30,10 @@
 }
 
 .lButton{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
     margin: 0 5px 0 5px;
     float: left;
     height: 5vh;
@@ -44,6 +48,11 @@
     -moz-user-select: none;
 }
 
+.lButton p{
+    display: block;
+    margin:auto;
+}
+
 .lButton:hover{
     background: #292929;
 }
@@ -53,6 +62,8 @@
 }
 
 .dd-selector{
+    display: block;
+    margin: 0 auto;
     float: left;
     height: 5vh;
     width: 150px;
@@ -63,6 +74,10 @@
 }
 
 .cButton{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
     margin: 0 5px 0 5px;
     float: left;
     width: 100px;

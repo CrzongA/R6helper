@@ -24,7 +24,8 @@ class R6props extends React.Component{
     }
 
     componentDidMount() {
-        // console.log(ops_json)
+        // console.logds                 (gadgets)
+        // console.log(ops)
     }
 
     componentDidUpdate(){
@@ -33,7 +34,7 @@ class R6props extends React.Component{
     }
 
     toSVG(op){
-        let pathname = "../../resources/operators/"+op+".svg"
+        let pathname = "resources/operators/"+op+".svg"
         return
     }
 
@@ -51,7 +52,7 @@ class R6props extends React.Component{
                         dangerouslySetInnerHTML={{__html: ops[item].toSVG({class: "opSVG"})}}
                     />
                 )
-            }else if (ops[item].role=="Defender"){
+            } else if (ops[item].role=="Defender"){
                 def.push(
                     <div
                         key={item}
@@ -79,7 +80,6 @@ class R6props extends React.Component{
     }
 
     loadGadgets(){
-        // console.log(gadgets)
         Object.keys(gadgets).forEach(item=>{
             if (gadgets[item].role=="attacker"){
                 this.attGadgets.push(

@@ -252,7 +252,7 @@ class Map extends React.Component{
         if (!this.state.tactical) {
             let loc = mapEntries.find(m => m.location == this.state.location).levels
             let bgLevel = loc.find(l => l.background==true).index
-            let pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + bgLevel + ".jpg"
+            let pathname = "resources/maps/" + this.state.location + "/" + this.state.location + "-" + bgLevel + ".jpg"
             return <img draggable={false} className={"map-content map-bg"} src={pathname}/>
         }
     }
@@ -281,14 +281,14 @@ class Map extends React.Component{
         }
 
         if (this.state.tactical){ // normal img width + height
-            pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + "-t.jpg"
+            pathname = "resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + "-t.jpg"
             width = mapEntries.find(m => m.location == this.state.location).tacMapDimension.width
             height = mapEntries.find(m => m.location == this.state.location).tacMapDimension.height
             minlevel=this.state.tMinLevel
             levelcount=this.state.tLevelCount
         }
         else{ // background img width + height
-            pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + ".jpg"
+            pathname = "resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + ".jpg"
             width = mapEntries.find(m => m.location == this.state.location).bgMapDimension.width
             height = mapEntries.find(m => m.location == this.state.location).bgMapDimension.height
             minlevel=this.state.minLevel

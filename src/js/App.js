@@ -2,6 +2,7 @@ import React from "react"
 import r6operators from "r6operators"
 import Map from "./Map"
 import fs from "fs"
+import '../css/index.css'
 import "../css/main.css"
 import "../css/map.css"
 import "../css/sidebar.css"

@@ -1,7 +1,9 @@
 const webpack = require('webpack')
+const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const port = process.env.PORT || 3000;
+const distPath = path.resolve(__dirname, 'dist')
 
 module.exports = {
   node: {
@@ -10,7 +12,8 @@ module.exports = {
   mode: 'development',
   entry: './src/js/main.js',
   output: {
-    filename: './src/bundle.js'
+    path: distPath,
+    filename: '[name].bundle.js'
   },
   devtool: 'inline-source-map',
   module: {
@@ -51,6 +54,17 @@ module.exports = {
             'css-loader',
             'sass-loader'
         ]
+      },
+      {
+        test: /\.ttf$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'dist/fonts/',
+            }
+          }
+        ]
       }
     ]
   },
@@ -61,7 +75,9 @@ module.exports = {
     })
   ],
   devServer: {
+    contentBase: distPath,
     host: 'localhost',
+    compress: true,
     port: port,
     historyApiFallback: true,
     open: true
