@@ -97,21 +97,10 @@ class Annotate extends React.Component {
     handleMouseDown = (e) => {
         let cursorX = e.evt.layerX
         let cursorY = e.evt.layerY
-        // console.log("click "+ cursorX + " "+ cursorY)
-        // console.log(e.currentTarget, e.target.content.className)
-        // console.log(e.evt.screenX, e.evt.screenY)
         if (!this.props.movable && this.props.mode=="draw") {
             this.setState({painting: true})
             this.addPoint(cursorX+this.props.annotateOffset.x, cursorY+this.props.annotateOffset.y, true)
         }
-/*
-        else if (this.props.movable){
-            this.setState({prevMoveXY:{x:cursorX, y:cursorY}})
-            // this.props.dragHandler(null, {x:cursorX, y:cursorY})
-            this.props.changeMoving(true)
-        }
-*/
-
     }
 
     handleMouseMove = (e) => {

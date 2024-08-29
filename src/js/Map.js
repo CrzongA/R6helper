@@ -33,8 +33,10 @@ class Map extends React.Component{
             annotateRef:'',
             annotateDimension:{w:0, h:0},
             opsMenuDisplay: "none",
+            gadgetsMenuDisplay: "none",
             selectedOps: {attack: [], defense: []},
-            paths:{normal:[{level:"1",count:0,items:[]}],tactical:[{level:"1",count:0,items:[]}]}
+            paths:{normal:[{level:"1",count:0,items:[]}],tactical:[{level:"1",count:0,items:[]}]},
+            gadgetItems:{normal:[{level:"1", count:0, items:[]}], tactical:[{level:"1", count:0, items:[]}]}
         }
         this.maps = mapEntries
         this.loadMapImg = this.loadMapImg.bind(this)
@@ -122,7 +124,22 @@ class Map extends React.Component{
         this.initPathsPlaceholder()
     }
 
+    setOpsMenuDisplay(){
+        if (this.state.gadgetsMenuDisplay == "none"){
+            this.setState({gadgetsMenuDisplay: "block"})
+        }else{
+            this.setState({gadgetsMenuDisplay: "none"})
+        }
+    }
 
+    createOpIcon(id){
+
+    }
+
+    createGadget(type, ){
+
+        // this.setState()
+    }
 
     presetSVGid(){
         return

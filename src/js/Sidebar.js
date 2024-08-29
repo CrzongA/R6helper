@@ -151,7 +151,12 @@ class Sidebar extends React.Component {
                         </div>
                         {this.confirmClearPath()}
                     </div>
-                    <div className={"opsChooser cButton"} onClick={this.props.handleOps}>Operators & Props</div>
+                    <div className={"opsChooser cButton"} onClick={this.props.handleOps}>
+                        Operators
+                    </div>
+                    <div className={"gadgetChooser cButton"} onClick={this.props.handleGadgets}>
+                        Gadgets
+                    </div>
                 </div>
             </div>
         )

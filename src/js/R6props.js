@@ -1,6 +1,7 @@
 import React from "react"
 import ops from "r6operators";
 import ops_json from "./operators.json"
+import gadgets from "./gadgets.json"
 
 class R6props extends React.Component{
     constructor() {
@@ -15,6 +16,7 @@ class R6props extends React.Component{
         this.selectOp = this.selectOp.bind(this)
         this.loadSelectedAtt = this.loadSelectedAtt.bind(this)
         this.loadSelectedDef = this.loadSelectedDef.bind(this)
+        this.loadGadgets = this.loadGadgets.bind(this)
     }
 
     componentDidMount() {
@@ -62,6 +64,49 @@ class R6props extends React.Component{
                 <div className={"osm-sub"}>
                     <p>Defenders</p>
                     {def}
+                </div>
+            </div>
+        )
+    }
+
+    loadGadgets(){
+        let attGadgets=[], defGadgets=[]
+        Object.keys(gadgets).forEach(item=>{
+            if (gadgets[item].role=="attacker"){
+                attGadgets.push(
+                    <div
+                        key={gadgets[item].id}
+                        className={"gad-inMenu"}
+                        onClick={e=>{this.addIcon()}}
+                        >
+                        <img src={gadgets[item].filepath}/>
+                    </div>
+                )
+            }
+        })
+        Object.keys(gadgets).forEach(item=>{
+            if (gadgets[item].role=="defender"){
+                defGadgets.push(
+                    <div
+                        key={gadgets[item].id}
+                        className={"gad-inMenu"}
+                        onClick={e=>{this.addIcon()}}
+                    >
+                        <img src={gadgets[item].filepath}/>
+                    </div>
+                )
+            }
+        })
+
+        return(
+            <div>
+                <div className={"gsm-sub divider"}>
+                    <p>Attacker Gadgets</p>
+                    {attGadgets}
+                </div>
+                <div>
+                    <p>Defender Gadgets</p>
+                    {defGadgets}
                 </div>
             </div>
         )
@@ -145,6 +190,7 @@ class R6props extends React.Component{
                 </div>
                 {this.loadSelectedAtt()}
                 {this.loadSelectedDef()}
+                {this.loadGadgets()}
             </div>
         )
     }

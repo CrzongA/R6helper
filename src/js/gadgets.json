@@ -1,0 +1,227 @@
+{
+  "alibi": {
+    "name": "Alibi Prisma",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Alibi.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "bandit": {
+    "name": "Electric Charge",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Bandit.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "barbwire": {
+    "name": "Barbwire",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Barb.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "barricade": {
+    "name": "Barricade",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Barricade.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "Castle": {
+    "name": "Castle Barricade",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Castle.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "claymore": {
+    "name": "Claymore",
+    "role": "attacker",
+    "filepath": "\\resources\\gadgets\\Claymore.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "drone": {
+    "name": "Drone",
+    "role": "attacker",
+    "filepath": "\\resources\\gadgets\\Drone.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "echo": {
+    "name": "Echo Drone",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Echo.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "ela": {
+    "name": "Concussion Mine",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Ela.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "frost": {
+    "name": "Welcome Mat",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Frost.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "goyo": {
+    "name": "Volcanic Shield",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Goyo.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "jager": {
+    "name": "Jäger ADS",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Jager.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "kaid": {
+    "name": "Electroclaw",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Kaid.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "Kapkan": {
+    "name": "Entry Denial Device",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Kapkan.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "lesion": {
+    "name": "Gu Mine",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Lesion.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "maestro": {
+    "name": "Evil Eye",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Maestro.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "mira": {
+    "name": "Black Mirror",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Mira.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "mozzie": {
+    "name": "Mozzie Pest",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Mozzie.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "mute": {
+    "name": "Signal Disruptor",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Mute.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "nomad": {
+    "name": "Nomad Airjab",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Nomad.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "reinforcement": {
+    "name": "Wall Reinforcement",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Reinforcement.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "rotate": {
+    "name": "Rotation Hole",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Rotate.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "shield": {
+    "name": "Deployable Shield",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Shield.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "smokebabe": {
+    "name": "Smoke Canister",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\SmokeCanister.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  },
+  "valkyrie": {
+    "name": "Black Eye",
+    "role": "defender",
+    "filepath": "\\resources\\gadgets\\Valkyrie.png",
+    "size": {
+      "x": null,
+      "y": null
+    }
+  }
+}
