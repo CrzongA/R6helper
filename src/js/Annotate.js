@@ -21,13 +21,13 @@ class Annotate extends React.Component {
         this.draw = this.draw.bind(this)
         this.addPoint = this.addPoint.bind(this)
         this.closePath = this.closePath.bind(this)
+        this.updateCursor = this.updateCursor.bind(this)
+        this.clearPoints = this.clearPoints.bind(this)
+        this.loadPanels = this.loadPanels.bind(this)
         this.handleMouseDown = this.handleMouseDown.bind(this)
         this.handleMouseLeave = this.handleMouseLeave.bind(this)
         this.handleMouseMove = this.handleMouseMove.bind(this)
         this.handleMouseUp = this.handleMouseUp.bind(this)
-        this.updateCursor = this.updateCursor.bind(this)
-        this.clearPoints = this.clearPoints.bind(this)
-        this.loadPanels = this.loadPanels.bind(this)
 
     }
 

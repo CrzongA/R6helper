@@ -4,7 +4,9 @@ import Sidebar from "./Sidebar";
 import Annotate from "./Annotate"
 import R6props from "./R6props"
 import mapEntries from "./mapEntries"
-import ops from "r6operators"
+
+var zoomMax = 0.0005
+var zoomMin = 2.2
 
 class Map extends React.Component{
     constructor(props) {
@@ -34,8 +36,10 @@ class Map extends React.Component{
             annotateDimension:{w:0, h:0},
             opsMenuDisplay: "none",
             gadgetsMenuDisplay: "none",
+            gadgetsMenuDisplay: "none",
             selectedOps: {attack: [], defense: []},
             paths:{normal:[{level:"1",count:0,items:[]}],tactical:[{level:"1",count:0,items:[]}]},
+            gadgetItems:{normal:[{level:"1", count:0, items:[]}], tactical:[{level:"1", count:0, items:[]}]},
             gadgetItems:{normal:[{level:"1", count:0, items:[]}], tactical:[{level:"1", count:0, items:[]}]}
         }
         this.maps = mapEntries
@@ -58,6 +62,7 @@ class Map extends React.Component{
         this.setMap = this.setMap.bind(this)
         this.loadIconSVG = this.loadIconSVG.bind(this)
         this.setOpsMenuDisplay = this.setOpsMenuDisplay.bind(this)
+        this.setGadgetsMenuDisplay = this.setGadgetsMenuDisplay.bind(this)
         this.loadMapBg = this.loadMapBg.bind(this)
         this.loadMapTop = this.loadMapTop.bind(this)
         this.updatePaths = this.updatePaths.bind(this)
@@ -125,6 +130,29 @@ class Map extends React.Component{
     }
 
     setOpsMenuDisplay(){
+        if (this.state.opsMenuDisplay == "none"){
+            this.setState({opsMenuDisplay: "flex"})
+        }else{
+            this.setState({opsMenuDisplay: "none"})
+        }
+    }
+    setGadgetsMenuDisplay(){
+        if (this.state.gadgetsMenuDisplay == "none"){
+            this.setState({gadgetsMenuDisplay: "flex"})
+        }else{
+            this.setState({gadgetsMenuDisplay: "none"})
+        }
+        console.log('gadget menu')
+    }
+
+    createOpIcon(id){
+
+    }
+
+    createGadget(type, ){
+
+        // this.setState()
+    }    setOpsMenuDisplay(){
         if (this.state.gadgetsMenuDisplay == "none"){
             this.setState({gadgetsMenuDisplay: "block"})
         }else{
@@ -148,8 +176,8 @@ class Map extends React.Component{
     scrollToZoom(e){
         e.preventDefault();
         let scale = this.state.scale
-        scale += e.deltaY * -0.05
-        scale = Math.min(Math.max(.3, scale), 2.5)
+        scale += e.deltaY * -zoomMax
+        scale = Math.min(Math.max(.3, scale), zoomMin)
 
         this.setState( {scale: scale})
         console.log(this.state.scale, e.deltaY)
@@ -241,7 +269,7 @@ class Map extends React.Component{
         if (!this.state.tactical) {
             let loc = mapEntries.find(m => m.location == this.state.location).levels
             let bgLevel = loc.find(l => l.background==true).index
-            let pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + bgLevel + ".jpg"
+            let pathname = "resources/maps/" + this.state.location + "/" + this.state.location + "-" + bgLevel + ".jpg"
             return <img draggable={false} className={"map-content map-bg"} src={pathname}/>
         }
     }
@@ -270,14 +298,14 @@ class Map extends React.Component{
         }
 
         if (this.state.tactical){ // normal img width + height
-            pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + "-t.jpg"
+            pathname = "resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + "-t.jpg"
             width = mapEntries.find(m => m.location == this.state.location).tacMapDimension.width
             height = mapEntries.find(m => m.location == this.state.location).tacMapDimension.height
             minlevel=this.state.tMinLevel
             levelcount=this.state.tLevelCount
         }
         else{ // background img width + height
-            pathname = "../../resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + ".jpg"
+            pathname = "resources/maps/" + this.state.location + "/" + this.state.location + "-" + level + ".jpg"
             width = mapEntries.find(m => m.location == this.state.location).bgMapDimension.width
             height = mapEntries.find(m => m.location == this.state.location).bgMapDimension.height
             minlevel=this.state.minLevel
@@ -451,14 +479,6 @@ class Map extends React.Component{
         return {__html: ret}
     }
 
-    setOpsMenuDisplay(){
-        if (this.state.opsMenuDisplay == "none"){
-            this.setState({opsMenuDisplay: "flex"})
-        }else{
-            this.setState({opsMenuDisplay: "none"})
-        }
-    }
-
     recenter = (e) => {
         this.setState({mapOffset:{x:0, y:0}})
     }
@@ -504,10 +524,12 @@ class Map extends React.Component{
                     panelHandler={this.setPanelNo}
                     mapHandler={this.setMap}
                     handleOps={this.setOpsMenuDisplay}
+                    handleGadgets={this.setGadgetsMenuDisplay}
                 />
                 {this.loadPanels()}
                 <R6props
-                    display={this.state.opsMenuDisplay}
+                    gadgetSelectDisplay={this.state.gadgetsMenuDisplay}
+                    opDisplay={this.state.opsMenuDisplay}
                     setOps={this.setSelectedOps}
                     selectedOps={this.state.selectedOps}
                 />

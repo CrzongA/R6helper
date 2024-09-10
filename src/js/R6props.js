@@ -2,6 +2,7 @@ import React from "react"
 import ops from "r6operators";
 import ops_json from "./operators.json"
 import gadgets from "./gadgets.json"
+import gadgets from "./gadgets.json"
 
 class R6props extends React.Component{
     constructor() {
@@ -10,42 +11,53 @@ class R6props extends React.Component{
             opsCoords: [],
             opsProps: [],
             maxOps: 27,
-
+            gadTab: "att"
         }
+        this.attGadgets=[]
+        this.defGadgets=[]
+
         this.loadOps = this.loadOps.bind(this)
         this.selectOp = this.selectOp.bind(this)
         this.loadSelectedAtt = this.loadSelectedAtt.bind(this)
         this.loadSelectedDef = this.loadSelectedDef.bind(this)
         this.loadGadgets = this.loadGadgets.bind(this)
+        this.switchGadTab = this.switchGadTab.bind(this)
+        this.loadGadgets = this.loadGadgets.bind(this)
     }
 
     componentDidMount() {
-        // console.log(ops_json)
+        // console.logds                 (gadgets)
+        // console.log(ops)
+    }
+
+    componentDidUpdate(){
+        this.loadOps()
+        this.loadGadgets()
     }
 
     toSVG(op){
-        let pathname = "../../resources/operators/"+op+".svg"
+        let pathname = "resources/operators/"+op+".svg"
         return
     }
 
     loadOps(){
         let att=[], def=[]
+        // console.log(ops)
         Object.keys(ops).forEach(item => {
-            // console.log(ops[item].toSVG())
             if (ops[item].role=="Attacker" ) {
                 att.push(
-                        <div
-                            key={ops[item].id}
-                            className={"op-inMenu"}
-                            style={{order:ops[item].index}}
-                            onClick={(e)=>{this.selectOp(e, ops[item].id, ops[item].role)}}
-                            dangerouslySetInnerHTML={{__html: ops[item].toSVG({class: "opSVG"})}}
-                        />
+                    <div
+                        key={item}
+                        className={"op-inMenu"}
+                        style={{order:ops[item].index}}
+                        onClick={(e)=>{this.selectOp(e, ops[item].id, ops[item].role)}}
+                        dangerouslySetInnerHTML={{__html: ops[item].toSVG({class: "opSVG"})}}
+                    />
                 )
-            }else if (ops[item].role=="Defender"){
+            } else if (ops[item].role=="Defender"){
                 def.push(
                     <div
-                        key={ops[item].id}
+                        key={item}
                         className={"op-inMenu"}
                         style={{order:ops[item].index}}
                         onClick={(e)=>{this.selectOp(e, ops[item].id, ops[item].role)}}
@@ -67,6 +79,55 @@ class R6props extends React.Component{
                 </div>
             </div>
         )
+    }
+
+    loadGadgets(){
+        Object.keys(gadgets).forEach(item=>{
+            if (gadgets[item].role=="attacker"){
+                this.attGadgets.push(
+                    <div
+                        key={gadgets[item].id}
+                        className={"gad-inMenu"}
+                        onClick={e=>{this.addIcon()}}
+                    >
+                        <img src={gadgets[item].filepath}/>
+                    </div>
+                )
+            }
+            else if (gadgets[item].role=="defender"){
+                this.defGadgets.push(
+                    <div
+                        key={gadgets[item].id}
+                        className={"gad-inMenu"}
+                        onClick={e=>{this.addIcon()}}
+                    >
+                        <img src={gadgets[item].filepath}/>
+                    </div>
+                )
+            }
+        })
+
+        let gad = this.attGadgets
+        // if (this.state.gadTab == "att") gad = attGadgets
+        // else gad = defGadgets
+
+        return(
+            <div className={"gadTab-wrapper"}>
+                <div className={"gadTab-selector"}>
+                    <div className={"gadTab selected"}><p>Attacker</p></div>
+                    <div className={"gadTab"}><p>Defender</p></div>
+                </div>
+                <div className={"gadTab-display"}>
+                    {gad}
+                </div>
+            </div>
+        )
+    }
+
+    switchGadTab(){
+        if (this.state.gadTab == "att")
+            this.setState({gadTab: "def"})
+        else this.setState({gadTab: "att"})
     }
 
     loadGadgets(){
@@ -185,12 +246,16 @@ class R6props extends React.Component{
     render(){
         return(
             <div>
-                <div style={{display:this.props.display}} className={"opSelectMenu"}>
+                <div style={{display:this.props.opDisplay}} className={"opSelectMenu"}>
                     {this.loadOps()}
+                </div>
+                <div style={{display:this.props.gadgetSelectDisplay}} className={"gadgetSelectMenu"}>
+                    {this.loadGadgets()}
                 </div>
                 {this.loadSelectedAtt()}
                 {this.loadSelectedDef()}
                 {this.loadGadgets()}
+
             </div>
         )
     }

@@ -2,11 +2,12 @@ import React from "react"
 import r6operators from "r6operators"
 import Map from "./Map"
 import fs from "fs"
+import '../css/index.css'
 import "../css/main.css"
 import "../css/map.css"
 import "../css/sidebar.css"
 import "../css/annotate.css"
-import "../css/operators.css"
+import "../css/r6props.css"
 
 class App extends React.Component{
     constructor(){
